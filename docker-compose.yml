@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16
+    container_name: koyarwa-db
+    environment:
+      POSTGRES_USER: koyarwa
+      POSTGRES_PASSWORD: koyarwa
+      POSTGRES_DB: koyarwa
+    ports:
+      # publié uniquement sur la loopback de l'hôte (pas exposé au réseau local),
+      # sur 5433 pour éviter un conflit avec un Postgres local sur 5432
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - koyarwa_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U koyarwa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: koyarwa-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - path: ./backend/.env
+        required: false
+    environment:
+      # Surcharge la connexion pour le réseau docker (db:5432 en interne)
+      DB_HOST: db
+      DB_PORT: "5432"
+    ports:
+      - "127.0.0.1:8000:8000"
+
+# Le frontend (Vite) se lance en local (npm run dev) et pointe sur le backend.
+# docker-compose n'orchestre donc que la base et l'API.
+
+volumes:
+  koyarwa_pgdata:
