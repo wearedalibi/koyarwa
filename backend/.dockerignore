@@ -1,0 +1,15 @@
+# Environnement virtuel (recréé dans l'image) et caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Secrets / env local
+.env
+.env.local
+
+# Divers
+.git/
+.dockerignore
+Dockerfile

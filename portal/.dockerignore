@@ -1,0 +1,14 @@
+# Dépendances (réinstallées dans l'image) et build local
+node_modules/
+dist/
+.vite/
+
+# Secrets / env local
+.env
+.env.local
+
+# Divers
+.git/
+.dockerignore
+Dockerfile
+npm-debug.log*

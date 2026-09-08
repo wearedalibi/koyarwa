@@ -34,8 +34,20 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
 
-# Le portal (Vite) se lance en local (npm run dev) et pointe sur le backend.
-# docker-compose n'orchestre donc que la base et l'API.
+  portal:
+    build:
+      context: ./portal
+      args:
+        # vide = URLs d'API relatives ; nginx proxifie /api vers le backend
+        VITE_API_BASE_URL: ""
+    container_name: koyarwa-portal
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:3000:80"
+
+# Le portal (nginx) sert la SPA et proxifie /api vers le backend (même origine,
+# pas de CORS). En dev, on préfère `npm run dev` (HMR) qui pointe sur l'API via CORS.
 
 volumes:
   koyarwa_pgdata:

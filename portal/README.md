@@ -58,3 +58,17 @@ base (`fontFamilyBase`), qui se propage à tous les composants Fluent.
 La police par défaut est **Google Sans**, chargée depuis **Google Fonts** dans
 `index.html`. Pour l'auto-héberger (perf / hors-ligne), déposer les `.woff2` dans
 `src/assets/` et déclarer un `@font-face`.
+
+## Docker
+
+Image de production multi-stage (build Vite → **nginx**) : `Dockerfile` + `nginx.conf`
+(fallback SPA + proxy `/api` vers le backend).
+
+```bash
+docker build -t koyarwa-portal .
+docker run --rm -p 3000:80 koyarwa-portal
+```
+
+L'URL de l'API est injectée au build via l'argument `VITE_API_BASE_URL` (défaut
+vide = chemins relatifs proxifiés par nginx). Le plus simple reste
+`docker compose up --build` à la racine.
