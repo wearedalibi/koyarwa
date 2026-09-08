@@ -3,8 +3,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
 
 from koyarwa import __version__
+from koyarwa.admin import ADMIN_STATIC_DIR, RequiresLogin, admin_router, requires_login_handler
 from koyarwa.api.ratelimit import RateLimitMiddleware
 from koyarwa.api.v1.router import api_router
 from koyarwa.core.config import settings
@@ -28,6 +31,16 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # Sessions signées (cookie) — support de l'auth du back-office admin.
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=settings.admin.session_secret.get_secret_value(),
+        session_cookie=settings.admin.session_cookie,
+        max_age=settings.admin.session_max_age,
+        same_site="lax",
+        https_only=settings.app.is_prod,
+    )
+
     # Rate limiting ajouté avant CORS pour que CORS reste le middleware le plus
     # externe (les réponses 429 portent ainsi les en-têtes CORS). La santé est
     # exemptée pour ne pas gêner les sondes de disponibilité.
@@ -48,6 +61,12 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(api_router, prefix=settings.app.api_v1_prefix)
+
+    # Back-office admin (Jinja + HTMX) — hors schéma OpenAPI (canal HTML, pas l'API).
+    app.mount("/admin/static", StaticFiles(directory=str(ADMIN_STATIC_DIR)), name="admin-static")
+    app.include_router(admin_router, include_in_schema=False)
+    app.add_exception_handler(RequiresLogin, requires_login_handler)
+
     return app
 
 

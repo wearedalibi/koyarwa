@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Connexion{% endblock %}
+{% block content %}
+<h1>Connexion</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form class="card" method="post" action="/admin/login" style="max-width: 360px">
+  <label for="username">Utilisateur</label>
+  <input id="username" name="username" autocomplete="username" autofocus />
+  <label for="password">Mot de passe</label>
+  <input id="password" name="password" type="password" autocomplete="current-password" />
+  <button type="submit">Se connecter</button>
+</form>
+{% endblock %}

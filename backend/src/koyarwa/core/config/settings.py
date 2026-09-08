@@ -3,6 +3,7 @@ from functools import lru_cache
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
+from koyarwa.core.config.admin import AdminSettings
 from koyarwa.core.config.app import AppSettings
 from koyarwa.core.config.cors import CORSSettings
 from koyarwa.core.config.database import DatabaseSettings
@@ -17,6 +18,7 @@ class Settings(BaseSettings):
     """
 
     app: AppSettings = Field(default_factory=AppSettings)
+    admin: AdminSettings = Field(default_factory=AdminSettings)
     db: DatabaseSettings = Field(default_factory=DatabaseSettings)
     cors: CORSSettings = Field(default_factory=CORSSettings)
     ratelimit: RateLimitSettings = Field(default_factory=RateLimitSettings)
