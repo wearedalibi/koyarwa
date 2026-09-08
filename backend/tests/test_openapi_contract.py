@@ -1,6 +1,6 @@
 """Garde-fou du contrat : `backend/openapi.json` doit rester à jour.
 
-Ce fichier committé est la source de vérité dont dérive le frontend. S'il est
+Ce fichier committé est la source de vérité dont dérive le portal. S'il est
 périmé, la dérive se propage silencieusement — ce test l'empêche.
 """
 

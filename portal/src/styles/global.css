@@ -1,6 +1,6 @@
 :root {
-  --koyarwa-font-base: "Google Sans", "Google Sans Text", Roboto, "Segoe UI",
-    system-ui, -apple-system, sans-serif;
+  --koyarwa-font-base: "Google Sans", "Segoe UI", system-ui, -apple-system,
+    sans-serif;
 }
 
 html,

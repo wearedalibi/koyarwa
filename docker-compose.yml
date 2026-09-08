@@ -34,7 +34,7 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
 
-# Le frontend (Vite) se lance en local (npm run dev) et pointe sur le backend.
+# Le portal (Vite) se lance en local (npm run dev) et pointe sur le backend.
 # docker-compose n'orchestre donc que la base et l'API.
 
 volumes:
