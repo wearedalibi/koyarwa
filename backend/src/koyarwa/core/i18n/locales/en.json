@@ -1,0 +1,14 @@
+{
+  "app.tagline": "Online learning platform",
+  "common.language": "Language",
+  "common.next": "Next",
+  "common.back": "Back",
+  "common.save": "Save",
+  "common.test": "Test",
+  "admin.login.title": "Sign in",
+  "admin.login.username": "Username",
+  "admin.login.password": "Password",
+  "admin.login.submit": "Sign in",
+  "admin.login.invalid": "Invalid credentials.",
+  "admin.logout": "Log out"
+}

@@ -1,0 +1,14 @@
+{
+  "app.tagline": "Online-Lernplattform",
+  "common.language": "Sprache",
+  "common.next": "Weiter",
+  "common.back": "Zurück",
+  "common.save": "Speichern",
+  "common.test": "Testen",
+  "admin.login.title": "Anmelden",
+  "admin.login.username": "Benutzer",
+  "admin.login.password": "Passwort",
+  "admin.login.submit": "Anmelden",
+  "admin.login.invalid": "Ungültige Anmeldedaten.",
+  "admin.logout": "Abmelden"
+}

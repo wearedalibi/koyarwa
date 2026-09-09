@@ -1,0 +1,14 @@
+{
+  "app.tagline": "Plateforme d'apprentissage en ligne",
+  "common.language": "Langue",
+  "common.next": "Suivant",
+  "common.back": "Retour",
+  "common.save": "Enregistrer",
+  "common.test": "Tester",
+  "admin.login.title": "Connexion",
+  "admin.login.username": "Utilisateur",
+  "admin.login.password": "Mot de passe",
+  "admin.login.submit": "Se connecter",
+  "admin.login.invalid": "Identifiants invalides.",
+  "admin.logout": "Déconnexion"
+}
