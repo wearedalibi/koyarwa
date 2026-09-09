@@ -11,8 +11,10 @@ __pycache__/
 .env
 .env.local
 
-# Config d'instance (secrets — écrite par l'assistant de mise en place)
-instance/
+# Config d'instance runtime (secrets — écrite par l'assistant de mise en place).
+# Ancré à la racine pour NE PAS ignorer le package source `core/instance/`.
+/instance/
+/backend/instance/
 
 # Node
 node_modules/
