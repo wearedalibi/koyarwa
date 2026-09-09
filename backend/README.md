@@ -89,10 +89,10 @@ aux services ni aux routers.
    - `schemas.py` — DTO Pydantic ·  `repository.py` — port + implémentation ·
      `service.py` — logique métier ·  `router.py` — endpoints API
 2. Inclure le router d'API dans `api/v1/router.py` (et/ou exposer des pages dans `admin/`).
-3. Si la feature a des modèles SQLAlchemy, les importer dans `scripts/init_db.py`.
+3. Si la feature a des modèles SQLAlchemy, créer une **migration Alembic** et les importer dans `migrations/env.py`.
 4. Régénérer le contrat : `uv run python scripts/dump_openapi.py`.
 
 ## Notes production
-- Ajouter Alembic pour le versionnage de schéma (à la place de `init_db.py`).
+- Le schéma est versionné par **Alembic** (`migrations/`) : `uv run alembic revision -m "…"` puis `uv run alembic upgrade head`.
 - Remplacer le rate limiter en mémoire par un store partagé (Redis) si l'API est répliquée.
 - Comptes admin en base + mots de passe hachés ; `ADMIN_SESSION_SECRET` fort.

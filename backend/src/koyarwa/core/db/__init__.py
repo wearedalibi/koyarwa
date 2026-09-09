@@ -1,4 +1,4 @@
 from koyarwa.core.db.base import Base
-from koyarwa.core.db.session import get_engine, get_session, get_sessionmaker
+from koyarwa.core.db.session import get_engine, get_session, get_sessionmaker, resolve_db_url
 
-__all__ = ["Base", "get_engine", "get_session", "get_sessionmaker"]
+__all__ = ["Base", "get_engine", "get_session", "get_sessionmaker", "resolve_db_url"]
