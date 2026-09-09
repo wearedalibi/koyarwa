@@ -10,6 +10,7 @@ from koyarwa import __version__
 from koyarwa.admin import ADMIN_STATIC_DIR, RequiresLogin, admin_router, requires_login_handler
 from koyarwa.api.ratelimit import RateLimitMiddleware
 from koyarwa.api.v1.router import api_router
+from koyarwa.bootstrap import SetupGateMiddleware, setup_router
 from koyarwa.core.config import settings
 
 
@@ -60,11 +61,18 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # Setup-gate (le middleware le plus externe) : tant que l'instance n'est pas
+    # installée, tout est redirigé vers l'assistant `/setup` ; une fois installée,
+    # `/setup` est fermé.
+    app.add_middleware(SetupGateMiddleware)
+
     app.include_router(api_router, prefix=settings.app.api_v1_prefix)
 
     # Back-office admin (Jinja + HTMX) — hors schéma OpenAPI (canal HTML, pas l'API).
     app.mount("/admin/static", StaticFiles(directory=str(ADMIN_STATIC_DIR)), name="admin-static")
     app.include_router(admin_router, include_in_schema=False)
+    app.include_router(setup_router)
+
     app.add_exception_handler(RequiresLogin, requires_login_handler)
 
     return app

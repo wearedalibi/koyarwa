@@ -1,0 +1,8 @@
+{% if ok %}
+<p class="ok"><i data-lucide="circle-check"></i> {{ t("setup.database.ok") }}</p>
+{% else %}
+<p class="error">
+  <i data-lucide="circle-x"></i> {{ t("setup.database.fail") }}<br />
+  <small>{{ error }}</small>
+</p>
+{% endif %}

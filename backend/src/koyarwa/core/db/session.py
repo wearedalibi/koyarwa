@@ -44,3 +44,9 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """Dépendance FastAPI : fournit une session async par requête."""
     async with get_sessionmaker()() as session:
         yield session
+
+
+def reset_engine() -> None:
+    """Oublie le moteur en cache — à appeler après (re)configuration de la base."""
+    get_engine.cache_clear()
+    get_sessionmaker.cache_clear()

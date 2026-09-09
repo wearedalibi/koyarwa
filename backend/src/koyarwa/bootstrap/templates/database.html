@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h1><i data-lucide="database"></i> {{ t("setup.step.database") }}</h1>
+<p class="subtitle">{{ t("setup.database.intro") }}</p>
+{% if error %}<p class="error">{{ t("setup.database.fail") }} {{ error }}</p>{% endif %}
+<form class="card stack" method="post" action="/setup/database">
+  <div class="field">
+    <label for="engine">{{ t("setup.database.engine") }}</label>
+    <select id="engine" name="engine">
+      <option value="postgresql" {{ "selected" if form.get("engine") == "postgresql" else "" }}>PostgreSQL</option>
+      <option value="mysql" {{ "selected" if form.get("engine") == "mysql" else "" }}>MySQL</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="host">{{ t("setup.database.host") }}</label>
+    <input id="host" name="host" value="{{ form.get('host', '') }}" />
+  </div>
+  <div class="field">
+    <label for="port">{{ t("setup.database.port") }}</label>
+    <input id="port" name="port" value="{{ form.get('port', '') }}" placeholder="5432 / 3306" />
+  </div>
+  <div class="field">
+    <label for="user">{{ t("setup.database.user") }}</label>
+    <input id="user" name="user" value="{{ form.get('user', '') }}" />
+  </div>
+  <div class="field">
+    <label for="password">{{ t("setup.database.password") }}</label>
+    <input id="password" name="password" type="password" value="{{ form.get('password', '') }}" />
+  </div>
+  <div class="field">
+    <label for="name">{{ t("setup.database.name") }}</label>
+    <input id="name" name="name" value="{{ form.get('name', '') }}" />
+  </div>
+  <div>
+    <button
+      type="button"
+      class="btn-secondary"
+      hx-post="/setup/database/test"
+      hx-include="closest form"
+      hx-target="#db-test"
+    >
+      <i data-lucide="plug"></i> {{ t("setup.database.test") }}
+    </button>
+  </div>
+  <div id="db-test"></div>
+  <button type="submit"><i data-lucide="arrow-right"></i> {{ t("common.next") }}</button>
+</form>
+{% endblock %}
