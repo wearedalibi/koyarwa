@@ -17,8 +17,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from koyarwa.core.db import Base, resolve_db_url
 
-# Pour l'autogénération, importer ici les modèles afin de peupler Base.metadata,
-# par ex. : from koyarwa.features.identity import models  (avec un « noqa: F401 »).
+# Importer les modèles pour peupler Base.metadata (nécessaire à l'autogénération).
+from koyarwa.features.identity import models  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:
