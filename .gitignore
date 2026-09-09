@@ -11,6 +11,9 @@ __pycache__/
 .env
 .env.local
 
+# Config d'instance (secrets — écrite par l'assistant de mise en place)
+instance/
+
 # Node
 node_modules/
 dist/

@@ -11,6 +11,13 @@ from sqlalchemy.ext.asyncio import (
 from koyarwa.core.config import settings
 
 
+def _resolve_db_url() -> str:
+    """URL de connexion : config d'instance si installée, sinon l'environnement (dev)."""
+    from koyarwa.core.instance import config as instance_config
+
+    return instance_config.database_url() or settings.db.url
+
+
 @lru_cache(maxsize=1)
 def get_engine() -> AsyncEngine:
     """Moteur async créé **paresseusement** (au premier accès, pas à l'import).
@@ -19,7 +26,7 @@ def get_engine() -> AsyncEngine:
     aucune connexion n'est tentée tant qu'une feature n'a pas besoin de la base.
     """
     return create_async_engine(
-        settings.db.url,
+        _resolve_db_url(),
         echo=settings.db.echo,
         pool_size=settings.db.pool_size,
         max_overflow=settings.db.max_overflow,

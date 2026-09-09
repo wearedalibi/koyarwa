@@ -2,6 +2,7 @@ from typing import Literal
 
 from pydantic import SecretStr
 from pydantic_settings import SettingsConfigDict
+from sqlalchemy import URL
 
 from koyarwa.core.config.base import SectionSettings
 
@@ -13,12 +14,36 @@ _ASYNC_DRIVERS: dict[str, str] = {
 _DEFAULT_PORTS: dict[str, int] = {"postgresql": 5432, "mysql": 3306}
 
 
+def build_async_url(
+    *,
+    engine: str,
+    host: str,
+    port: int | None,
+    user: str,
+    password: str,
+    name: str,
+) -> str:
+    """Compose une URL SQLAlchemy async pour le moteur donné.
+
+    Passe par `URL.create` pour un échappement correct (mots de passe à caractères
+    spéciaux inclus).
+    """
+    return URL.create(
+        drivername=_ASYNC_DRIVERS[engine],
+        username=user,
+        password=password,
+        host=host,
+        port=port if port is not None else _DEFAULT_PORTS[engine],
+        database=name,
+    ).render_as_string(hide_password=False)
+
+
 class DatabaseSettings(SectionSettings):
     """Connexion à la base — préfixe `DB_`. Moteur **PostgreSQL** ou **MySQL**.
 
     L'URL n'est jamais écrite en dur : elle est composée à partir des composants.
-    Pour une instance installée, ces valeurs proviennent de la configuration
-    d'instance (écrite par l'assistant de mise en place).
+    Pour une instance installée, la connexion provient plutôt de la configuration
+    d'instance (voir `core.instance`) ; ces valeurs servent de repli en développement.
     """
 
     model_config = SettingsConfigDict(env_prefix="DB_")
@@ -48,7 +73,11 @@ class DatabaseSettings(SectionSettings):
     @property
     def url(self) -> str:
         """DSN SQLAlchemy async, composé à partir des composants."""
-        return (
-            f"{self.driver}://{self.user}:{self.password.get_secret_value()}"
-            f"@{self.host}:{self.resolved_port}/{self.name}"
+        return build_async_url(
+            engine=self.engine,
+            host=self.host,
+            port=self.port,
+            user=self.user,
+            password=self.password.get_secret_value(),
+            name=self.name,
         )
