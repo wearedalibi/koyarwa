@@ -4,43 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}Admin{% endblock %} · Koyarwa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/admin/static/admin.css" />
     <script src="/admin/static/htmx.min.js"></script>
-    <style>
-      :root {
-        --fg: #242424; --muted: #616161; --bd: #e0e0e0; --brand: #0f6cbd; --bg: #faf9f8;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0; color: var(--fg); background: var(--bg);
-        font-family: "Google Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
-      }
-      header {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 12px 24px; background: #fff; border-bottom: 1px solid var(--bd);
-      }
-      header .brand { font-weight: 600; color: var(--brand); }
-      a { color: var(--brand); text-decoration: none; }
-      main { max-width: 900px; margin: 24px auto; padding: 0 24px; }
-      h1 { font-size: 1.4rem; }
-      table { width: 100%; border-collapse: collapse; margin-top: 16px; background: #fff; }
-      th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--bd); vertical-align: top; }
-      th { color: var(--muted); font-weight: 600; font-size: .85rem; }
-      .card { background: #fff; border: 1px solid var(--bd); border-radius: 8px; padding: 16px; }
-      label { display: block; font-size: .85rem; color: var(--muted); margin: 8px 0 4px; }
-      input, textarea { width: 100%; padding: 8px; border: 1px solid var(--bd); border-radius: 6px; font: inherit; }
-      button {
-        margin-top: 12px; padding: 8px 16px; border: 0; border-radius: 6px;
-        background: var(--brand); color: #fff; font: inherit; cursor: pointer;
-      }
-      .error { color: #b10e1c; margin: 8px 0; }
-      .muted { color: var(--muted); }
-    </style>
   </head>
   <body>
-    <header>
+    <header class="appbar">
       <span class="brand">Koyarwa · Admin</span>
       {% if user %}
-      <span class="muted">{{ user }} — <a href="/admin/logout">Déconnexion</a></span>
+      <span class="user">{{ user }} · <a href="/admin/logout">Déconnexion</a></span>
       {% endif %}
     </header>
     <main>{% block content %}{% endblock %}</main>

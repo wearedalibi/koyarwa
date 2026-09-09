@@ -1,0 +1,291 @@
+/*
+ * Admin — habillage Fluent 2 sans librairie (design tokens en variables CSS).
+ * Les valeurs reprennent les tokens Fluent UI (webLightTheme / webDarkTheme) :
+ * neutres, brand (communication blue #0f6cbd), typo, espacements, rayons, ombres.
+ * Thème sombre automatique via prefers-color-scheme.
+ */
+
+:root {
+  /* Neutres (clair) */
+  --colorNeutralForeground1: #242424;
+  --colorNeutralForeground2: #424242;
+  --colorNeutralForeground3: #616161;
+  --colorNeutralBackground1: #ffffff;
+  --colorNeutralBackground1Hover: #f5f5f5;
+  --colorNeutralBackground2: #fafafa;
+  --colorNeutralBackground3: #f5f5f5;
+  --colorNeutralStroke1: #d1d1d1;
+  --colorNeutralStroke2: #e0e0e0;
+  --colorNeutralStroke3: #f0f0f0;
+  --colorNeutralStrokeAccessible: #616161;
+  --colorStrokeFocus2: #000000;
+
+  /* Brand */
+  --colorBrandBackground: #0f6cbd;
+  --colorBrandBackgroundHover: #115ea3;
+  --colorBrandBackgroundPressed: #0c3b5e;
+  --colorBrandForeground1: #0f6cbd;
+  --colorCompoundBrandStroke: #0f6cbd;
+
+  /* Danger */
+  --colorPaletteRedForeground1: #b10e1c;
+  --colorPaletteRedBackground1: #fdf3f4;
+
+  /* Typographie (Google Sans par défaut, chargée dans base.html) */
+  --fontFamilyBase: "Google Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --fontSizeBase200: 12px;
+  --fontSizeBase300: 14px;
+  --fontSizeBase400: 16px;
+  --fontSizeBase600: 24px;
+  --lineHeightBase300: 20px;
+  --lineHeightBase600: 32px;
+  --fontWeightRegular: 400;
+  --fontWeightSemibold: 600;
+
+  /* Espacements */
+  --spacingXS: 4px;
+  --spacingS: 8px;
+  --spacingM: 12px;
+  --spacingL: 16px;
+  --spacingXL: 20px;
+  --spacingXXL: 24px;
+
+  /* Rayons */
+  --borderRadiusMedium: 4px;
+  --borderRadiusLarge: 6px;
+  --borderRadiusXLarge: 8px;
+
+  /* Ombres (élévation Fluent) */
+  --shadow4: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.14);
+  --shadow8: 0 0 2px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --colorNeutralForeground1: #ffffff;
+    --colorNeutralForeground2: #d6d6d6;
+    --colorNeutralForeground3: #adadad;
+    --colorNeutralBackground1: #292929;
+    --colorNeutralBackground1Hover: #3d3d3d;
+    --colorNeutralBackground2: #1f1f1f;
+    --colorNeutralBackground3: #141414;
+    --colorNeutralStroke1: #666666;
+    --colorNeutralStroke2: #525252;
+    --colorNeutralStroke3: #3d3d3d;
+    --colorNeutralStrokeAccessible: #adadad;
+    --colorStrokeFocus2: #ffffff;
+    --colorBrandBackground: #115ea3;
+    --colorBrandBackgroundHover: #0f6cbd;
+    --colorBrandBackgroundPressed: #0c3b5e;
+    --colorBrandForeground1: #479ef5;
+    --colorCompoundBrandStroke: #479ef5;
+    --colorPaletteRedForeground1: #ff9b9b;
+    --colorPaletteRedBackground1: #3b1b1b;
+    --shadow4: 0 0 2px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.28);
+    --shadow8: 0 0 2px rgba(0, 0, 0, 0.24), 0 4px 8px rgba(0, 0, 0, 0.28);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fontFamilyBase);
+  font-size: var(--fontSizeBase300);
+  line-height: var(--lineHeightBase300);
+  color: var(--colorNeutralForeground1);
+  background: var(--colorNeutralBackground2);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--colorBrandForeground1);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Barre d'application */
+header.appbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 var(--spacingXXL);
+  background: var(--colorNeutralBackground1);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  box-shadow: var(--shadow4);
+}
+header.appbar .brand {
+  font-weight: var(--fontWeightSemibold);
+  font-size: var(--fontSizeBase400);
+  color: var(--colorBrandForeground1);
+}
+header.appbar .user {
+  color: var(--colorNeutralForeground3);
+}
+
+main {
+  max-width: 960px;
+  margin: var(--spacingXXL) auto;
+  padding: 0 var(--spacingXXL);
+}
+
+h1 {
+  margin: 0 0 var(--spacingM);
+  font-size: var(--fontSizeBase600);
+  line-height: var(--lineHeightBase600);
+  font-weight: var(--fontWeightSemibold);
+}
+
+.subtitle {
+  margin: 0 0 var(--spacingXL);
+  color: var(--colorNeutralForeground2);
+}
+.muted {
+  color: var(--colorNeutralForeground3);
+}
+
+code {
+  padding: 1px 4px;
+  border-radius: var(--borderRadiusMedium);
+  background: var(--colorNeutralBackground3);
+  font-size: var(--fontSizeBase200);
+}
+
+/* Carte */
+.card {
+  padding: var(--spacingXL);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  box-shadow: var(--shadow4);
+}
+
+/* Empilement vertical régulier */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingM);
+}
+.stack > button {
+  align-self: flex-start;
+}
+
+/* Champs de formulaire */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+.field label {
+  margin-bottom: var(--spacingXS);
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground2);
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground1);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-bottom-color: var(--colorNeutralStrokeAccessible);
+  border-radius: var(--borderRadiusMedium);
+  outline: none;
+  transition: border-color 0.1s ease;
+}
+textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+input:hover,
+textarea:hover {
+  border-color: var(--colorNeutralStrokeAccessible);
+}
+/* Fluent : soulignement brand animé sous le champ au focus (sans saut de hauteur) */
+input:focus,
+textarea:focus {
+  border-color: var(--colorNeutralStroke1);
+  border-bottom: 2px solid var(--colorCompoundBrandStroke);
+  padding-bottom: 5px;
+}
+
+/* Boutons (primaire Fluent) */
+button {
+  padding: 6px 16px;
+  font: inherit;
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightSemibold);
+  color: #ffffff;
+  background: var(--colorBrandBackground);
+  border: 1px solid transparent;
+  border-radius: var(--borderRadiusMedium);
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+button:hover {
+  background: var(--colorBrandBackgroundHover);
+}
+button:active {
+  background: var(--colorBrandBackgroundPressed);
+}
+button:focus-visible {
+  outline: 2px solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}
+
+/* Tableau (style DataGrid Fluent) */
+table {
+  width: 100%;
+  margin-top: var(--spacingL);
+  border-collapse: collapse;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusLarge);
+  overflow: hidden;
+}
+thead th {
+  padding: var(--spacingS) var(--spacingM);
+  text-align: left;
+  font-size: var(--fontSizeBase200);
+  font-weight: var(--fontWeightSemibold);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--colorNeutralForeground3);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+}
+tbody td {
+  padding: var(--spacingM);
+  vertical-align: top;
+  border-bottom: 1px solid var(--colorNeutralStroke3);
+}
+tbody tr:last-child td {
+  border-bottom: none;
+}
+tbody tr:hover {
+  background: var(--colorNeutralBackground1Hover);
+}
+
+/* Alerte / erreur */
+.error {
+  margin-bottom: var(--spacingM);
+  padding: var(--spacingS) var(--spacingM);
+  color: var(--colorPaletteRedForeground1);
+  background: var(--colorPaletteRedBackground1);
+  border: 1px solid var(--colorPaletteRedForeground1);
+  border-radius: var(--borderRadiusMedium);
+}
+
+/* Page de connexion centrée */
+.auth {
+  max-width: 360px;
+  margin: 8vh auto 0;
+}

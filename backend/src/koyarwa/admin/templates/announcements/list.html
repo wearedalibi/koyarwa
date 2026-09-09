@@ -2,22 +2,26 @@
 {% block title %}Annonces{% endblock %}
 {% block content %}
 <h1>Annonces</h1>
-<p class="muted">
+<p class="subtitle">
   Créées ici par l'admin, exposées au portal via <code>GET /api/v1/announcements</code>.
 </p>
 
 <form
-  class="card"
+  class="card stack"
   hx-post="/admin/announcements"
   hx-target="#rows"
   hx-swap="afterbegin"
   hx-on::after-request="if (event.detail.successful) this.reset()"
-  style="max-width: 520px"
+  style="max-width: 560px"
 >
-  <label for="title">Titre</label>
-  <input id="title" name="title" required maxlength="200" />
-  <label for="body">Contenu</label>
-  <textarea id="body" name="body" rows="3" required></textarea>
+  <div class="field">
+    <label for="title">Titre</label>
+    <input id="title" name="title" required maxlength="200" />
+  </div>
+  <div class="field">
+    <label for="body">Contenu</label>
+    <textarea id="body" name="body" rows="3" required></textarea>
+  </div>
   <button type="submit">Publier</button>
 </form>
 
