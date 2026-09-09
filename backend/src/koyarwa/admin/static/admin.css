@@ -289,3 +289,32 @@ tbody tr:hover {
   max-width: 360px;
   margin: 8vh auto 0;
 }
+
+/* Icônes (Lucide) — le SVG généré porte la classe .lucide et hérite de currentColor */
+.lucide {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacingS);
+}
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacingS);
+}
+header.appbar .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingS);
+}
+header.appbar .user a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingXS);
+  vertical-align: middle;
+}

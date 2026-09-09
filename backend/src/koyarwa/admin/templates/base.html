@@ -12,14 +12,23 @@
     />
     <link rel="stylesheet" href="/admin/static/admin.css" />
     <script src="/admin/static/htmx.min.js"></script>
+    <script src="/admin/static/lucide.min.js"></script>
   </head>
   <body>
     <header class="appbar">
-      <span class="brand">Koyarwa · Admin</span>
+      <span class="brand"><i data-lucide="layout-dashboard"></i> Koyarwa · Admin</span>
       {% if user %}
-      <span class="user">{{ user }} · <a href="/admin/logout">Déconnexion</a></span>
+      <span class="user">{{ user }} · <a href="/admin/logout"><i data-lucide="log-out"></i> Déconnexion</a></span>
       {% endif %}
     </header>
     <main>{% block content %}{% endblock %}</main>
+    <script>
+      // Convertit les <i data-lucide="…"> en SVG, au chargement et après chaque swap HTMX.
+      function renderIcons() {
+        if (window.lucide) window.lucide.createIcons();
+      }
+      document.addEventListener("DOMContentLoaded", renderIcons);
+      document.addEventListener("htmx:afterSettle", renderIcons);
+    </script>
   </body>
 </html>

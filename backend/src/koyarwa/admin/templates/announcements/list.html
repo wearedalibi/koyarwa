@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Annonces{% endblock %}
 {% block content %}
-<h1>Annonces</h1>
+<h1><i data-lucide="megaphone"></i> Annonces</h1>
 <p class="subtitle">
   Créées ici par l'admin, exposées au portal via <code>GET /api/v1/announcements</code>.
 </p>
@@ -22,7 +22,7 @@
     <label for="body">Contenu</label>
     <textarea id="body" name="body" rows="3" required></textarea>
   </div>
-  <button type="submit">Publier</button>
+  <button type="submit"><i data-lucide="send"></i> Publier</button>
 </form>
 
 <table>
