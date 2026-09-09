@@ -1,22 +1,164 @@
-{% extends "base.html" %}
-{% block title %}Connexion{% endblock %}
-{% block content %}
-<div class="auth">
-  <h1><i data-lucide="lock"></i> Connexion</h1>
-  {% if error %}<p class="error">{{ error }}</p>{% endif %}
-  <form class="card stack" method="post" action="/admin/login">
-    <div class="field">
-      <label for="username">Utilisateur</label>
-      <input id="username" name="username" autocomplete="username" autofocus />
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Connexion · Koyarwa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/admin/static/admin.css" />
+    <script src="/admin/static/lucide.min.js"></script>
+    <script src="/admin/static/ui.js"></script>
+    <style>
+      body {
+        margin: 0;
+      }
+      .auth-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 100vh;
+      }
+      /* Panneau image (avec dégradé de marque en repli si l'image est absente) */
+      .auth-visual {
+        position: relative;
+        background-color: var(--colorBrandBackground);
+        background-image:
+          linear-gradient(150deg, rgba(15, 108, 189, 0.35), rgba(12, 59, 94, 0.8)),
+          url("/admin/static/img/login.jpg");
+        background-size: cover;
+        background-position: center;
+      }
+      .auth-visual .caption {
+        position: absolute;
+        left: 44px;
+        right: 44px;
+        bottom: 44px;
+        color: #fff;
+      }
+      .auth-visual .caption strong {
+        display: block;
+        font-family: "Google Sans", sans-serif;
+        font-size: 1.7rem;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+      .auth-visual .caption span {
+        opacity: 0.92;
+      }
+      /* Panneau formulaire */
+      .auth-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        background: var(--colorNeutralBackground1);
+      }
+      .auth-box {
+        width: 100%;
+        max-width: 340px;
+      }
+      .brandmark {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+      .brandmark svg {
+        width: 42px;
+        height: 42px;
+        flex: none;
+      }
+      .brandmark .name {
+        font-family: "Google Sans", sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+        line-height: 1.05;
+      }
+      .brandmark .name small {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--colorNeutralForeground3);
+      }
+      .auth-box h1 {
+        margin: 0 0 4px;
+        font-size: 1.4rem;
+      }
+      .auth-box .sub {
+        margin: 0 0 22px;
+        font-size: 0.9rem;
+        color: var(--colorNeutralForeground3);
+      }
+      .auth-box .stack button[type="submit"] {
+        width: 100%;
+      }
+      @media (max-width: 760px) {
+        .auth-split {
+          grid-template-columns: 1fr;
+        }
+        .auth-visual {
+          min-height: 170px;
+        }
+        .auth-visual .caption {
+          left: 24px;
+          right: 24px;
+          bottom: 20px;
+        }
+        .auth-visual .caption strong {
+          font-size: 1.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-split">
+      <aside class="auth-visual" aria-hidden="true">
+        <div class="caption">
+          <strong>Apprendre, partout.</strong>
+          <span>L'espace d'administration de votre établissement.</span>
+        </div>
+      </aside>
+      <main class="auth-panel">
+        <div class="auth-box">
+          <div class="brandmark">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Koyarwa">
+              <rect width="64" height="64" rx="14" fill="#0f6cbd" />
+              <path d="M22 16h7v13.5L40.5 16H49L36 32l13 16h-8.5L29 34.5V48h-7z" fill="#fff" />
+            </svg>
+            <span class="name">Koyarwa<small>Administration</small></span>
+          </div>
+
+          <h1>Connexion</h1>
+          <p class="sub">Accédez à l'espace d'administration.</p>
+
+          {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+          <form class="stack" method="post" action="/admin/login">
+            <div class="field">
+              <label for="username">Utilisateur</label>
+              <input id="username" name="username" autocomplete="username" autofocus />
+            </div>
+            <div class="field">
+              <label for="password">Mot de passe</label>
+              <div class="pw" data-pw>
+                <input id="password" name="password" type="password" autocomplete="current-password" />
+                <button type="button" class="pw-toggle" data-pw-toggle aria-label="Afficher le mot de passe" aria-pressed="false"><i data-lucide="eye"></i></button>
+              </div>
+            </div>
+            <button type="submit"><i data-lucide="log-in"></i> Se connecter</button>
+          </form>
+        </div>
+      </main>
     </div>
-    <div class="field">
-      <label for="password">Mot de passe</label>
-      <div class="pw" data-pw>
-        <input id="password" name="password" type="password" autocomplete="current-password" />
-        <button type="button" class="pw-toggle" data-pw-toggle aria-label="Afficher le mot de passe" aria-pressed="false"><i data-lucide="eye"></i></button>
-      </div>
-    </div>
-    <button type="submit"><i data-lucide="log-in"></i> Se connecter</button>
-  </form>
-</div>
-{% endblock %}
+
+    <script>
+      if (window.lucide) window.lucide.createIcons();
+    </script>
+  </body>
+</html>
