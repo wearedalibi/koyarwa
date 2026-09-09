@@ -25,7 +25,10 @@
   </div>
   <div class="field">
     <label for="password">{{ t("setup.database.password") }}</label>
-    <input id="password" name="password" type="password" value="{{ form.get('password', '') }}" />
+    <div class="pw" data-pw>
+      <input id="password" name="password" type="password" value="{{ form.get('password', '') }}" />
+      <button type="button" class="pw-toggle" data-pw-toggle aria-label="Afficher le mot de passe" aria-pressed="false"><i data-lucide="eye"></i></button>
+    </div>
   </div>
   <div class="field">
     <label for="name">{{ t("setup.database.name") }}</label>

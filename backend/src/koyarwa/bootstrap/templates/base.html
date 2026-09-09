@@ -13,13 +13,31 @@
     <link rel="stylesheet" href="/admin/static/admin.css" />
     <script src="/admin/static/htmx.min.js"></script>
     <script src="/admin/static/lucide.min.js"></script>
+    <script src="/admin/static/ui.js"></script>
     <style>
-      .steps {
-        list-style: none; display: flex; flex-wrap: wrap; gap: 14px;
-        padding: 0; margin: 0 0 20px; font-size: 0.85rem;
-        color: var(--colorNeutralForeground3);
+      .stepper { list-style: none; display: flex; padding: 0; margin: 0 0 24px; }
+      .stepper li {
+        flex: 1; position: relative; display: flex; flex-direction: column;
+        align-items: center; gap: 6px; text-align: center;
+        font-size: 0.78rem; color: var(--colorNeutralForeground3);
       }
-      .steps li.on { color: var(--colorBrandForeground1); font-weight: 600; }
+      .stepper li::before {
+        content: ""; position: absolute; top: 15px; left: -50%;
+        width: 100%; height: 2px; background: var(--colorNeutralStroke2); z-index: 0;
+      }
+      .stepper li:first-child::before { display: none; }
+      .stepper .dot {
+        position: relative; z-index: 1; width: 32px; height: 32px; border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center; font-weight: 600;
+        background: var(--colorNeutralBackground1); border: 2px solid var(--colorNeutralStroke2);
+      }
+      .stepper .dot .lucide { width: 16px; height: 16px; }
+      .stepper li.current { color: var(--colorBrandForeground1); font-weight: 600; }
+      .stepper li.current .dot { border-color: var(--colorBrandForeground1); color: var(--colorBrandForeground1); }
+      .stepper li.done { color: var(--colorNeutralForeground2); }
+      .stepper li.done .dot {
+        background: var(--colorBrandBackground); border-color: var(--colorBrandBackground); color: #fff;
+      }
       select {
         width: 100%; padding: 6px 10px; font: inherit; font-size: 14px;
         color: var(--colorNeutralForeground1); background: var(--colorNeutralBackground1);
@@ -44,10 +62,13 @@
     </header>
     <main>
       <div class="auth" style="max-width: 520px">
-        <ol class="steps">
-          <li class="{{ 'on' if step == 'language' else '' }}">1 · {{ t("setup.step.language") }}</li>
-          <li class="{{ 'on' if step == 'database' else '' }}">2 · {{ t("setup.step.database") }}</li>
-          <li class="{{ 'on' if step == 'admin' else '' }}">3 · {{ t("setup.step.admin") }}</li>
+        <ol class="stepper">
+          {% for s in steps %}
+          <li class="{{ s.state }}">
+            <span class="dot">{% if s.state == 'done' %}<i data-lucide="check"></i>{% else %}{{ s.n }}{% endif %}</span>
+            <span class="lbl">{{ s.label }}</span>
+          </li>
+          {% endfor %}
         </ol>
         {% block content %}{% endblock %}
       </div>

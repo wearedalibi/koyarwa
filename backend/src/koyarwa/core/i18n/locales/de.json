@@ -31,5 +31,10 @@
   "setup.admin.email": "E-Mail",
   "setup.admin.username": "Benutzername",
   "setup.admin.password": "Passwort",
-  "setup.finish": "Einrichtung abschließen"
+  "setup.finish": "Einrichtung abschließen",
+  "pw.level1": "Schwach",
+  "pw.level2": "Mittel",
+  "pw.level3": "Stark",
+  "pw.level4": "Sehr stark",
+  "pw.hint": "Mindestens 10 Zeichen mit Groß-/Kleinbuchstaben, Ziffern und Symbolen."
 }

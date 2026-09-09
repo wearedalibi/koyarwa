@@ -43,13 +43,30 @@ def _save_state(request: Request, state: dict) -> None:
     request.session[_SESSION_KEY] = state
 
 
+_STEP_ORDER = ("language", "database", "admin")
+
+
 def _context(request: Request, step: str, **extra: object) -> dict:
     lang = normalize_locale(_state(request).get("language"))
+
+    def _t(key: str) -> str:
+        return translate(key, lang)
+
+    current = _STEP_ORDER.index(step) if step in _STEP_ORDER else 0
+    steps = [
+        {
+            "n": i + 1,
+            "label": _t(f"setup.step.{key}"),
+            "state": "done" if i < current else "current" if i == current else "upcoming",
+        }
+        for i, key in enumerate(_STEP_ORDER)
+    ]
     return {
         "step": step,
         "lang": lang,
         "languages": SUPPORTED_LANGUAGES,
-        "t": lambda key: translate(key, lang),
+        "t": _t,
+        "steps": steps,
         **extra,
     }
 

@@ -1,6 +1,17 @@
+import pytest
+from pydantic import ValidationError
+
 from koyarwa.features.identity.models import User
 from koyarwa.features.identity.schemas import UserCreate
 from koyarwa.features.identity.service import UserService
+
+
+def test_mot_de_passe_faible_refuse():
+    with pytest.raises(ValidationError):
+        UserCreate(username="admin", email="admin@ecole.fr", password="faible")  # trop court
+    with pytest.raises(ValidationError):
+        # 12 caractères mais un seul type → refusé
+        UserCreate(username="admin", email="admin@ecole.fr", password="aaaaaaaaaaaa")
 
 
 class FakeUserRepository:

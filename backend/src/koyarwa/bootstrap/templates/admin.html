@@ -18,7 +18,20 @@
   </div>
   <div class="field">
     <label for="password">{{ t("setup.admin.password") }}</label>
-    <input id="password" name="password" type="password" autocomplete="new-password" required minlength="8" />
+    <div class="pw" data-pw>
+      <input id="password" name="password" type="password" autocomplete="new-password" required minlength="10" />
+      <button type="button" class="pw-toggle" data-pw-toggle aria-label="Afficher le mot de passe" aria-pressed="false"><i data-lucide="eye"></i></button>
+    </div>
+    <div
+      class="strength"
+      data-strength
+      data-for="password"
+      data-labels='{"1":"{{ t("pw.level1") }}","2":"{{ t("pw.level2") }}","3":"{{ t("pw.level3") }}","4":"{{ t("pw.level4") }}"}'
+    >
+      <div class="strength-bars"><span></span><span></span><span></span><span></span></div>
+      <small class="strength-label"></small>
+    </div>
+    <small class="muted">{{ t("pw.hint") }}</small>
   </div>
   <button type="submit"><i data-lucide="circle-check-big"></i> {{ t("setup.finish") }}</button>
 </form>

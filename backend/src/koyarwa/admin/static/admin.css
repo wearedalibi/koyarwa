@@ -318,3 +318,76 @@ header.appbar .user a {
   gap: var(--spacingXS);
   vertical-align: middle;
 }
+
+/* Champ mot de passe : bouton œil (afficher / masquer) */
+.pw {
+  position: relative;
+}
+.pw input {
+  padding-right: 38px;
+}
+.pw-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 36px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--colorNeutralForeground3);
+}
+.pw-toggle:hover {
+  background: transparent;
+  color: var(--colorNeutralForeground1);
+}
+.pw-toggle .lucide {
+  width: 18px;
+  height: 18px;
+}
+
+/* Jauge de force du mot de passe */
+.strength {
+  margin-top: var(--spacingS);
+}
+.strength-bars {
+  display: flex;
+  gap: 4px;
+}
+.strength-bars span {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--colorNeutralStroke2);
+  transition: background 0.15s ease;
+}
+.strength-label {
+  display: block;
+  margin-top: var(--spacingXS);
+  font-size: var(--fontSizeBase200);
+  color: var(--colorNeutralForeground3);
+}
+.strength.s1 {
+  --strength-color: #d13438;
+}
+.strength.s2 {
+  --strength-color: #c77d13;
+}
+.strength.s3 {
+  --strength-color: #6a9a1f;
+}
+.strength.s4 {
+  --strength-color: #0e7a63;
+}
+.strength.s1 .strength-bars span:nth-child(-n + 1),
+.strength.s2 .strength-bars span:nth-child(-n + 2),
+.strength.s3 .strength-bars span:nth-child(-n + 3),
+.strength.s4 .strength-bars span:nth-child(-n + 4) {
+  background: var(--strength-color);
+}
+.strength.s1 .strength-label,
+.strength.s2 .strength-label,
+.strength.s3 .strength-label,
+.strength.s4 .strength-label {
+  color: var(--strength-color);
+}

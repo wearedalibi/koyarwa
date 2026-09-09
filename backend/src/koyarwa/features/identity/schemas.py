@@ -1,15 +1,31 @@
+import re
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 class UserCreate(BaseModel):
     username: str = Field(min_length=1, max_length=150)
     email: EmailStr
-    password: str = Field(min_length=8, description="Mot de passe en clair (haché avant stockage)")
+    password: str = Field(min_length=10, description="Mot de passe en clair (haché avant stockage)")
     first_name: str = Field(default="", max_length=150)
     last_name: str = Field(default="", max_length=150)
     lang: str = Field(default="fr", max_length=8)
+
+    @field_validator("password")
+    @classmethod
+    def _complexity(cls, value: str) -> str:
+        """Exige un mot de passe « corsé » : au moins 3 types de caractères."""
+        categories = sum(
+            bool(re.search(pattern, value))
+            for pattern in (r"[a-z]", r"[A-Z]", r"\d", r"[^A-Za-z0-9]")
+        )
+        if categories < 3:
+            raise ValueError(
+                "Le mot de passe doit mêler au moins 3 types de caractères "
+                "(minuscules, majuscules, chiffres, symboles)."
+            )
+        return value
 
 
 class UserRead(BaseModel):

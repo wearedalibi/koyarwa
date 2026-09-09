@@ -31,5 +31,10 @@
   "setup.admin.email": "E-mail",
   "setup.admin.username": "Identifiant",
   "setup.admin.password": "Mot de passe",
-  "setup.finish": "Terminer l'installation"
+  "setup.finish": "Terminer l'installation",
+  "pw.level1": "Faible",
+  "pw.level2": "Moyen",
+  "pw.level3": "Fort",
+  "pw.level4": "Très fort",
+  "pw.hint": "Au moins 10 caractères, avec majuscules, chiffres et symboles."
 }
