@@ -1,0 +1,68 @@
+site_name: Documentation Koyarwa
+site_description: >-
+  Koyarwa — plateforme d'apprentissage en ligne (LMS) open source, déployée
+  en instance par établissement.
+docs_dir: docs
+
+theme:
+  name: material
+  language: fr
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Passer au thème sombre
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: Passer au thème clair
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - content.code.copy
+    - search.suggest
+
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+
+nav:
+  - Accueil: index.md
+  - Introduction:
+      - Vue d'ensemble: introduction/vue-densemble.md
+      - Concepts clés: introduction/concepts-cles.md
+      - Architecture: introduction/architecture.md
+  - Démarrage:
+      - Installation (développement): demarrage/installation-developpement.md
+      - Assistant de mise en place: demarrage/installeur.md
+  - Administration:
+      - Espace d'administration: administration/espace-administration.md
+      - Utilisateurs & rôles: administration/utilisateurs-et-roles.md
+      - Inscriptions: administration/inscriptions.md
+      - Langues & base de données: administration/configuration.md
+  - Pédagogie:
+      - Cours, activités & notes: pedagogie/cours-activites-et-notes.md
+  - Modèle de données:
+      - Vue d'ensemble: modele-de-donnees/vue-densemble.md
+      - Référence des entités: modele-de-donnees/reference-entites.md
+  - API: api/reference-api.md
+  - Développement: developpement/guide.md
+  - Feuille de route: feuille-de-route.md
+
+# Pour servir la documentation en local :
+#   uv tool run --with mkdocs-material mkdocs serve
+# ou : pip install mkdocs-material && mkdocs serve

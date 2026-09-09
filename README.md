@@ -1,12 +1,24 @@
 # Koyarwa
 
-Projet full-stack : API **FastAPI** (Python/uv) + client **React + Fluent UI**.
+**Koyarwa** — plateforme d'apprentissage en ligne (LMS) open source, déployée **en
+instance par établissement**. API **FastAPI** (Python/uv) + espace d'administration +
+portail **React / Fluent UI**.
 
 ```
 koyarwa/
-├── backend/            # API FastAPI (uv) — architecture vertical slice
-├── portal/             # SPA React + Fluent UI (Vite, servie par nginx en prod)
-└── docker-compose.yml  # Postgres + API + portal
+├── backend/            # API + espace d'administration (FastAPI, uv)
+├── portal/             # portail React + Fluent UI (Vite, servi par nginx en prod)
+├── docs/               # documentation (site MkDocs)
+└── docker-compose.yml  # base + backend + portal
+```
+
+## Documentation
+
+La documentation complète est dans [`docs/`](docs/index.md) — vue d'ensemble, concepts,
+architecture, mise en place, administration, modèle de données, API et feuille de route.
+
+```bash
+uv tool run --with mkdocs-material mkdocs serve -a localhost:8081
 ```
 
 ## Tout via Docker
