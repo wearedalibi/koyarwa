@@ -31,6 +31,6 @@ def test_sauvegarde_puis_chargement(tmp_path, monkeypatch):
     assert ic.instance_language() == "de"
 
     url = ic.database_url()
-    assert url.startswith("postgresql+psycopg://u:")
+    assert url.startswith("postgresql+asyncpg://u:")
     assert "@db:5432/koyarwa" in url
     assert 'p@ss"x' not in url  # le mot de passe brut n'apparaît pas tel quel

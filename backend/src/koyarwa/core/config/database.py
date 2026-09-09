@@ -8,7 +8,7 @@ from koyarwa.core.config.base import SectionSettings
 
 # Driver SQLAlchemy async par moteur (pilotes purs Python, installables partout).
 _ASYNC_DRIVERS: dict[str, str] = {
-    "postgresql": "postgresql+psycopg",
+    "postgresql": "postgresql+asyncpg",
     "mysql": "mysql+aiomysql",
 }
 _DEFAULT_PORTS: dict[str, int] = {"postgresql": 5432, "mysql": 3306}
