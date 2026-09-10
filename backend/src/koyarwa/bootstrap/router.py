@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 from koyarwa.bootstrap import service
+from koyarwa.bootstrap.setup_token import verify_token
 from koyarwa.core.i18n import SUPPORTED_LANGUAGES, normalize_locale, translate
 from koyarwa.core.instance import DatabaseConfig
 from koyarwa.features.identity.schemas import UserCreate
@@ -41,6 +42,15 @@ def _state(request: Request) -> dict:
 
 def _save_state(request: Request, state: dict) -> None:
     request.session[_SESSION_KEY] = state
+
+
+def _token_ok(request: Request) -> bool:
+    return bool(_state(request).get("token_ok"))
+
+
+def _require_token(request: Request) -> RedirectResponse | None:
+    """Renvoie une redirection vers l'entrée du jeton tant qu'il n'est pas validé."""
+    return None if _token_ok(request) else RedirectResponse("/setup", status_code=303)
 
 
 _STEP_ORDER = ("language", "database", "admin")
@@ -82,21 +92,36 @@ def _db_config(form: DatabaseForm) -> DatabaseConfig:
     )
 
 
-# ── Étape 1 : langue ────────────────────────────────────────────────
+# ── Jeton d'installation (protège l'assistant) + étape 1 : langue ───
 @router.get("", response_class=HTMLResponse)
 def step_language(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(request, "language.html", _context(request, "language"))
+    template = "language.html" if _token_ok(request) else "token.html"
+    return templates.TemplateResponse(request, template, _context(request, "language"))
+
+
+@router.post("/token")
+def submit_token(request: Request, token: Annotated[str, Form()]) -> Response:
+    if verify_token(token):
+        _save_state(request, {**_state(request), "token_ok": True})
+        return RedirectResponse("/setup", status_code=303)
+    return templates.TemplateResponse(
+        request, "token.html", _context(request, "language", error=True), status_code=403
+    )
 
 
 @router.post("")
-def submit_language(request: Request, language: Annotated[str, Form()]) -> RedirectResponse:
+def submit_language(request: Request, language: Annotated[str, Form()]) -> Response:
+    if (redirect := _require_token(request)) is not None:
+        return redirect
     _save_state(request, {**_state(request), "language": normalize_locale(language)})
     return RedirectResponse("/setup/database", status_code=303)
 
 
 # ── Étape 2 : base de données ───────────────────────────────────────
 @router.get("/database", response_class=HTMLResponse)
-def step_database(request: Request) -> HTMLResponse:
+def step_database(request: Request) -> Response:
+    if (redirect := _require_token(request)) is not None:
+        return redirect
     form = _state(request).get("database", DatabaseForm().model_dump())
     return templates.TemplateResponse(
         request, "database.html", _context(request, "database", form=form)
@@ -104,7 +129,9 @@ def step_database(request: Request) -> HTMLResponse:
 
 
 @router.post("/database/test", response_class=HTMLResponse)
-async def test_database(request: Request, data: Annotated[DatabaseForm, Form()]) -> HTMLResponse:
+async def test_database(request: Request, data: Annotated[DatabaseForm, Form()]) -> Response:
+    if (redirect := _require_token(request)) is not None:
+        return redirect
     ok, error = await service.test_connection(_db_config(data))
     lang = normalize_locale(_state(request).get("language"))
     return templates.TemplateResponse(
@@ -114,6 +141,8 @@ async def test_database(request: Request, data: Annotated[DatabaseForm, Form()])
 
 @router.post("/database")
 async def submit_database(request: Request, data: Annotated[DatabaseForm, Form()]) -> Response:
+    if (redirect := _require_token(request)) is not None:
+        return redirect
     ok, error = await service.test_connection(_db_config(data))
     if not ok:
         return templates.TemplateResponse(
@@ -129,6 +158,8 @@ async def submit_database(request: Request, data: Annotated[DatabaseForm, Form()
 # ── Étape 3 : administrateur + finalisation ─────────────────────────
 @router.get("/admin", response_class=HTMLResponse)
 def step_admin(request: Request) -> Response:
+    if (redirect := _require_token(request)) is not None:
+        return redirect
     if "database" not in _state(request):
         return RedirectResponse("/setup/database", status_code=303)
     return templates.TemplateResponse(request, "admin.html", _context(request, "admin"))
@@ -136,6 +167,8 @@ def step_admin(request: Request) -> Response:
 
 @router.post("/admin")
 async def finalize(request: Request, data: Annotated[AdminForm, Form()]) -> Response:
+    if (redirect := _require_token(request)) is not None:
+        return redirect
     state = _state(request)
     db_data = state.get("database")
     if not db_data:

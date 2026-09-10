@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -11,16 +12,23 @@ from koyarwa.admin import ADMIN_STATIC_DIR, RequiresLogin, admin_router, require
 from koyarwa.api.ratelimit import RateLimitMiddleware
 from koyarwa.api.v1.router import api_router
 from koyarwa.bootstrap import SetupGateMiddleware, setup_router
+from koyarwa.bootstrap.setup_token import get_or_create_token
 from koyarwa.core.config import settings
+from koyarwa.core.instance import is_installed
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Point d'extension pour le cycle de vie de l'app (démarrage / arrêt).
+    """Cycle de vie de l'app.
 
-    Rien à initialiser pour l'instant. Y brancher plus tard ce qui doit vivre
-    aussi longtemps que le process : pools, clients, tâches de fond, warmup...
+    En mode installation (instance non installée), affiche le **jeton
+    d'installation** que l'assistant `/setup` exigera.
     """
+    if not is_installed():
+        logging.getLogger("koyarwa.setup").warning(
+            "Instance NON installée — assistant sur /setup, protégé par le jeton : %s",
+            get_or_create_token(),
+        )
     yield
 
 
