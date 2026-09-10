@@ -157,6 +157,14 @@ async def finalize(request: Request, data: Annotated[AdminForm, Form()]) -> Resp
             lang=language,
         )
         await service.finalize_install(language=language, database=database, admin=admin)
+    except service.InstanceAlreadyInstalledError:
+        # Base déjà peuplée (verrou fichier perdu ?) : on ne réinstalle pas dessus.
+        return templates.TemplateResponse(
+            request,
+            "admin.html",
+            _context(request, "admin", error=translate("setup.error.already_installed", language)),
+            status_code=409,
+        )
     except Exception:
         # Le détail (erreurs base/driver, DSN…) reste dans les journaux serveur ;
         # l'installateur ne reçoit qu'un message générique (pas de fuite d'info).

@@ -37,5 +37,6 @@
   "pw.level3": "Fort",
   "pw.level4": "Très fort",
   "pw.hint": "Au moins 10 caractères, avec majuscules, chiffres et symboles.",
-  "setup.error.generic": "L'installation a échoué. Consultez les journaux du serveur."
+  "setup.error.generic": "L'installation a échoué. Consultez les journaux du serveur.",
+  "setup.error.already_installed": "Cette base de données est déjà installée. Restaurez la configuration existante."
 }

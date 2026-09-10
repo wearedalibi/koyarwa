@@ -37,5 +37,6 @@
   "pw.level3": "Stark",
   "pw.level4": "Sehr stark",
   "pw.hint": "Mindestens 10 Zeichen mit Groß-/Kleinbuchstaben, Ziffern und Symbolen.",
-  "setup.error.generic": "Installation fehlgeschlagen. Prüfen Sie die Server-Protokolle."
+  "setup.error.generic": "Installation fehlgeschlagen. Prüfen Sie die Server-Protokolle.",
+  "setup.error.already_installed": "Diese Datenbank ist bereits installiert. Stellen Sie die vorhandene Konfiguration wieder her."
 }

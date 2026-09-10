@@ -20,6 +20,14 @@ from koyarwa.features.identity.service import UserService
 _BACKEND_ROOT = Path(__file__).resolve().parents[3]  # .../backend
 
 
+class InstanceAlreadyInstalledError(RuntimeError):
+    """La base cible contient déjà des comptes : on refuse d'installer par-dessus.
+
+    Garde-fou du cas où le verrou fichier (`config.toml`) a disparu mais la base
+    existe encore — évite de créer un second super-admin ou d'écraser l'existant.
+    """
+
+
 async def test_connection(db: DatabaseConfig) -> tuple[bool, str]:
     """Teste la connexion à la base ; renvoie `(ok, message_d_erreur)`."""
     url = build_async_url(
@@ -66,9 +74,12 @@ async def finalize_install(*, language: str, database: DatabaseConfig, admin: Us
     reset_engine()
     # 2. schéma
     await apply_migrations()
-    # 3. compte super-administrateur
+    # 3. compte super-administrateur — jamais par-dessus une base déjà peuplée
     async with get_sessionmaker()() as session:
-        await UserService(SqlUserRepository(session)).create(admin, is_superuser=True)
+        users = UserService(SqlUserRepository(session))
+        if await users.count() > 0:
+            raise InstanceAlreadyInstalledError
+        await users.create(admin, is_superuser=True)
         await session.commit()
     # 4. verrou d'installation
     save(
