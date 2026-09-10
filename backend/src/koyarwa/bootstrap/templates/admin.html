@@ -55,7 +55,8 @@
     </div>
     <div class="field">
       <label for="country">{{ t("setup.admin.country") }}</label>
-      <input id="country" name="country" autocomplete="country-name" />
+      <input id="country" name="country" list="country-options" autocomplete="country-name" />
+      <datalist id="country-options" data-country-list></datalist>
     </div>
   </div>
   <div class="field">
