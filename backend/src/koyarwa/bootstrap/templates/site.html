@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h1><i data-lucide="globe"></i> {{ t("setup.step.site") }}</h1>
+<p class="subtitle">{{ t("setup.site.intro") }}</p>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form class="card stack" method="post" action="/setup/site">
+  {{ csrf_input() }}
+  <div class="field">
+    <label for="full_name">{{ t("setup.site.full_name") }}</label>
+    <input id="full_name" name="full_name" required maxlength="255" />
+  </div>
+  <div class="field">
+    <label for="short_name">{{ t("setup.site.short_name") }}</label>
+    <input id="short_name" name="short_name" required maxlength="100" />
+  </div>
+  <div class="field">
+    <label for="description">{{ t("setup.site.description") }}</label>
+    <textarea id="description" name="description" rows="3"></textarea>
+  </div>
+  <div class="field">
+    <label for="timezone">{{ t("setup.site.timezone") }}</label>
+    <select id="timezone" name="timezone">
+      {% for tz in timezones %}
+      <option value="{{ tz }}" {{ "selected" if tz == "UTC" else "" }}>{{ tz }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="auth_method">{{ t("setup.site.auth_method") }}</label>
+    <select id="auth_method" name="auth_method">
+      {% for method in auth_methods %}
+      <option value="{{ method }}">{{ t("setup.site.auth." ~ method) }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="row2">
+    <div class="field">
+      <label for="noreply_email">{{ t("setup.site.noreply_email") }}</label>
+      <input id="noreply_email" name="noreply_email" type="email" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label for="support_email">{{ t("setup.site.support_email") }}</label>
+      <input id="support_email" name="support_email" type="email" autocomplete="off" />
+    </div>
+  </div>
+  <div class="setup-actions">
+    <a class="btn-back" href="/setup/admin"><i data-lucide="arrow-left"></i> {{ t("common.back") }}</a>
+    <button type="submit"><i data-lucide="circle-check-big"></i> {{ t("setup.finish") }}</button>
+  </div>
+</form>
+{% endblock %}

@@ -19,6 +19,7 @@ from koyarwa.core.db import Base, resolve_db_url
 
 # Importer les modèles pour peupler Base.metadata (nécessaire à l'autogénération).
 from koyarwa.features.identity import models  # noqa: F401
+from koyarwa.features.site import models as site_models  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:

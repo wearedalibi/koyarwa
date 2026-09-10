@@ -28,6 +28,16 @@ class UserService:
         )
         return await self._repository.add(user)
 
+    async def create_prehashed(self, *, is_superuser: bool = False, **fields: str) -> User:
+        """Crée un utilisateur dont le mot de passe est **déjà haché**.
+
+        `fields` porte les colonnes du compte, dont `password_hash` — utile quand le
+        hachage a eu lieu plus tôt (ex. étape d'assistant précédente) pour ne jamais
+        conserver le mot de passe en clair entre-temps.
+        """
+        user = User(is_active=True, is_superuser=is_superuser, **fields)
+        return await self._repository.add(user)
+
     async def authenticate(self, username: str, password: str) -> User | None:
         """Renvoie l'utilisateur si les identifiants sont valides et le compte actif."""
         user = await self._repository.get_by_username(username)

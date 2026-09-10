@@ -14,8 +14,10 @@ from koyarwa.core.config.database import build_async_url
 from koyarwa.core.db import get_sessionmaker, reset_engine
 from koyarwa.core.instance import DatabaseConfig, InstanceConfig, save
 from koyarwa.features.identity.repository import SqlUserRepository
-from koyarwa.features.identity.schemas import UserCreate
 from koyarwa.features.identity.service import UserService
+from koyarwa.features.site.repository import SqlSiteRepository
+from koyarwa.features.site.schemas import SiteCreate
+from koyarwa.features.site.service import SiteService
 
 _BACKEND_ROOT = Path(__file__).resolve().parents[3]  # .../backend
 
@@ -60,8 +62,18 @@ async def apply_migrations() -> None:
     await to_thread.run_sync(_run_migrations_sync)
 
 
-async def finalize_install(*, language: str, database: DatabaseConfig, admin: UserCreate) -> None:
-    """Écrit la config, applique le schéma, crée le super-admin, pose le verrou."""
+async def finalize_install(
+    *,
+    language: str,
+    database: DatabaseConfig,
+    admin: dict[str, str],
+    site: SiteCreate,
+) -> None:
+    """Écrit la config, applique le schéma, crée le super-admin et le site, pose le verrou.
+
+    `admin` est un brouillon dont le mot de passe est **déjà haché** (`password_hash`),
+    pour ne jamais conserver le mot de passe en clair entre les étapes de l'assistant.
+    """
     # Clé de session propre à l'instance, générée maintenant (façon salts WordPress) :
     # elle remplace la valeur par défaut d'usine au prochain démarrage.
     secret_key = secrets.token_urlsafe(48)
@@ -74,12 +86,13 @@ async def finalize_install(*, language: str, database: DatabaseConfig, admin: Us
     reset_engine()
     # 2. schéma
     await apply_migrations()
-    # 3. compte super-administrateur — jamais par-dessus une base déjà peuplée
+    # 3. super-admin + site — jamais par-dessus une base déjà peuplée
     async with get_sessionmaker()() as session:
         users = UserService(SqlUserRepository(session))
         if await users.count() > 0:
             raise InstanceAlreadyInstalledError
-        await users.create(admin, is_superuser=True)
+        await users.create_prehashed(is_superuser=True, **admin)
+        await SiteService(SqlSiteRepository(session)).create(site)
         await session.commit()
     # 4. verrou d'installation
     save(
