@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 from typing import Annotated
+from zoneinfo import available_timezones
 
 from fastapi import APIRouter, Form, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -32,10 +33,16 @@ class DatabaseForm(BaseModel):
 
 
 class AdminForm(BaseModel):
-    name: str = ""
+    first_name: str = ""
+    last_name: str = ""
     email: str
     username: str
     password: str
+    email_visibility: str = "hidden"
+    city: str = ""
+    country: str = ""
+    timezone: str = "UTC"
+    description: str = ""
 
 
 def _state(request: Request) -> dict:
@@ -134,7 +141,9 @@ async def submit_database(request: Request, data: Annotated[DatabaseForm, Form()
 def step_admin(request: Request) -> Response:
     if "database" not in _state(request):
         return RedirectResponse("/setup/database", status_code=303)
-    return templates.TemplateResponse(request, "admin.html", _context(request, "admin"))
+    return templates.TemplateResponse(
+        request, "admin.html", _context(request, "admin", timezones=sorted(available_timezones()))
+    )
 
 
 @router.post("/admin")
@@ -146,14 +155,19 @@ async def finalize(request: Request, data: Annotated[AdminForm, Form()]) -> Resp
 
     language = normalize_locale(state.get("language"))
     database = _db_config(DatabaseForm(**db_data))
-    first_name, _, last_name = data.name.partition(" ")
+    timezones = sorted(available_timezones())
     try:
         admin = UserCreate(
             username=data.username,
             email=data.email,
             password=data.password,
-            first_name=first_name,
-            last_name=last_name,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            email_visibility=data.email_visibility,
+            city=data.city,
+            country=data.country,
+            timezone=data.timezone,
+            description=data.description,
             lang=language,
         )
         await service.finalize_install(language=language, database=database, admin=admin)
@@ -162,7 +176,12 @@ async def finalize(request: Request, data: Annotated[AdminForm, Form()]) -> Resp
         return templates.TemplateResponse(
             request,
             "admin.html",
-            _context(request, "admin", error=translate("setup.error.already_installed", language)),
+            _context(
+                request,
+                "admin",
+                error=translate("setup.error.already_installed", language),
+                timezones=timezones,
+            ),
             status_code=409,
         )
     except Exception:
@@ -172,7 +191,12 @@ async def finalize(request: Request, data: Annotated[AdminForm, Form()]) -> Resp
         return templates.TemplateResponse(
             request,
             "admin.html",
-            _context(request, "admin", error=translate("setup.error.generic", language)),
+            _context(
+                request,
+                "admin",
+                error=translate("setup.error.generic", language),
+                timezones=timezones,
+            ),
             status_code=500,
         )
 

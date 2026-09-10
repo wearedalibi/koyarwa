@@ -1,7 +1,11 @@
 import re
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+
+#: Visibilité de l'adresse e-mail sur le profil.
+EmailVisibility = Literal["hidden", "public", "members"]
 
 
 class UserCreate(BaseModel):
@@ -10,6 +14,11 @@ class UserCreate(BaseModel):
     password: str = Field(min_length=10, description="Mot de passe en clair (haché avant stockage)")
     first_name: str = Field(default="", max_length=150)
     last_name: str = Field(default="", max_length=150)
+    email_visibility: EmailVisibility = "hidden"
+    city: str = Field(default="", max_length=100)
+    country: str = Field(default="", max_length=100)
+    timezone: str = Field(default="UTC", max_length=64)
+    description: str = Field(default="", max_length=2000)
     lang: str = Field(default="fr", max_length=8)
 
     @field_validator("password")

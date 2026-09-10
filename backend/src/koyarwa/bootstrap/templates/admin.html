@@ -5,17 +5,31 @@
 {% if error %}<p class="error">{{ error }}</p>{% endif %}
 <form class="card stack" method="post" action="/setup/admin">
   {{ csrf_input() }}
+  <div class="row2">
+    <div class="field">
+      <label for="first_name">{{ t("setup.admin.first_name") }}</label>
+      <input id="first_name" name="first_name" autocomplete="given-name" />
+    </div>
+    <div class="field">
+      <label for="last_name">{{ t("setup.admin.last_name") }}</label>
+      <input id="last_name" name="last_name" autocomplete="family-name" />
+    </div>
+  </div>
   <div class="field">
-    <label for="name">{{ t("setup.admin.name") }}</label>
-    <input id="name" name="name" autocomplete="name" />
+    <label for="username">{{ t("setup.admin.username") }}</label>
+    <input id="username" name="username" autocomplete="username" required />
   </div>
   <div class="field">
     <label for="email">{{ t("setup.admin.email") }}</label>
     <input id="email" name="email" type="email" autocomplete="email" required />
   </div>
   <div class="field">
-    <label for="username">{{ t("setup.admin.username") }}</label>
-    <input id="username" name="username" autocomplete="username" required />
+    <label for="email_visibility">{{ t("setup.admin.email_visibility") }}</label>
+    <select id="email_visibility" name="email_visibility">
+      <option value="hidden" selected>{{ t("setup.admin.visibility.hidden") }}</option>
+      <option value="members">{{ t("setup.admin.visibility.members") }}</option>
+      <option value="public">{{ t("setup.admin.visibility.public") }}</option>
+    </select>
   </div>
   <div class="field">
     <label for="password">{{ t("setup.admin.password") }}</label>
@@ -33,6 +47,28 @@
       <small class="strength-label"></small>
     </div>
     <small class="muted">{{ t("pw.hint") }}</small>
+  </div>
+  <div class="row2">
+    <div class="field">
+      <label for="city">{{ t("setup.admin.city") }}</label>
+      <input id="city" name="city" autocomplete="address-level2" />
+    </div>
+    <div class="field">
+      <label for="country">{{ t("setup.admin.country") }}</label>
+      <input id="country" name="country" autocomplete="country-name" />
+    </div>
+  </div>
+  <div class="field">
+    <label for="timezone">{{ t("setup.admin.timezone") }}</label>
+    <select id="timezone" name="timezone">
+      {% for tz in timezones %}
+      <option value="{{ tz }}" {{ "selected" if tz == "UTC" else "" }}>{{ tz }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="description">{{ t("setup.admin.description") }}</label>
+    <textarea id="description" name="description" rows="3"></textarea>
   </div>
   <div class="setup-actions">
     <a class="btn-back" href="/setup/database"><i data-lucide="arrow-left"></i> {{ t("common.back") }}</a>
