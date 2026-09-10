@@ -34,6 +34,9 @@
     </div>
     <small class="muted">{{ t("pw.hint") }}</small>
   </div>
-  <button type="submit"><i data-lucide="circle-check-big"></i> {{ t("setup.finish") }}</button>
+  <div class="setup-actions">
+    <a class="btn-back" href="/setup/database"><i data-lucide="arrow-left"></i> {{ t("common.back") }}</a>
+    <button type="submit"><i data-lucide="circle-check-big"></i> {{ t("setup.finish") }}</button>
+  </div>
 </form>
 {% endblock %}

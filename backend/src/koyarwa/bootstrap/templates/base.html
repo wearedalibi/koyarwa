@@ -59,11 +59,35 @@
         flex: none; display: flex; align-items: center; justify-content: flex-end;
         height: 48px; padding: 0 16px;
       }
+      /* Centrage par marges auto : centré quand le contenu tient, défilement
+         normal (sans rognage du haut) quand il dépasse la hauteur de l'écran. */
       main.setup-main {
         flex: 1 1 auto; max-width: none; margin: 0; padding: 24px;
-        display: flex; align-items: center; justify-content: center;
+        display: flex;
       }
-      main.setup-main .auth { margin: 0; width: 100%; max-width: 520px; }
+      main.setup-main .auth { margin: auto; width: 100%; max-width: 520px; }
+      /* Logo au-dessus des étapes */
+      .setup-brand {
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        margin-bottom: 20px;
+      }
+      .setup-brand svg { width: 34px; height: 34px; flex: none; }
+      .setup-brand .name {
+        font-family: "Google Sans", "Segoe UI", sans-serif;
+        font-weight: 700; font-size: 1.25rem; color: var(--colorNeutralForeground1);
+      }
+      /* Actions de bas de formulaire (retour + suivant) */
+      .setup-actions { display: flex; align-items: center; gap: 8px; }
+      .btn-back {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 6px 16px; font-size: 14px; font-weight: 600;
+        color: var(--colorNeutralForeground2);
+        background: var(--colorNeutralBackground3);
+        border: 1px solid var(--colorNeutralStroke1);
+        border-radius: var(--borderRadiusMedium);
+        text-decoration: none;
+      }
+      .btn-back:hover { background: var(--colorNeutralBackground1Hover); text-decoration: none; }
     </style>
   </head>
   <body class="setup-body">
@@ -74,6 +98,13 @@
     </header>
     <main class="setup-main">
       <div class="auth">
+        <div class="setup-brand">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Koyarwa">
+            <rect width="64" height="64" rx="14" fill="#0f6cbd" />
+            <path d="M22 16h7v13.5L40.5 16H49L36 32l13 16h-8.5L29 34.5V48h-7z" fill="#fff" />
+          </svg>
+          <span class="name">Koyarwa</span>
+        </div>
         <ol class="stepper">
           {% for s in steps %}
           <li class="{{ s.state }}">
