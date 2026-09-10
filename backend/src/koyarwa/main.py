@@ -15,6 +15,7 @@ from koyarwa.bootstrap import SetupGateMiddleware, setup_router
 from koyarwa.core.config import settings
 from koyarwa.core.instance import is_installed, resolve_session_secret
 from koyarwa.core.security import csrf_protect
+from koyarwa.core.security.checks import check_startup_security
 
 
 @asynccontextmanager
@@ -23,6 +24,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     Signale au démarrage qu'une instance non installée expose l'assistant `/setup`.
     """
+    check_startup_security()
     if not is_installed():
         logging.getLogger("koyarwa.setup").warning(
             "Instance NON installée — ouvrez l'assistant de mise en place sur /setup."
