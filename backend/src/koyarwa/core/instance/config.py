@@ -22,6 +22,9 @@ from koyarwa.core.instance.storage import write_private_text
 
 INSTANCE_DIR_ENV = "KOYARWA_INSTANCE_DIR"
 CONFIG_FILENAME = "config.toml"
+#: Permet de garder le mot de passe de base HORS du fichier config.toml : s'il est
+#: défini, il prime sur la valeur persistée (source : env / gestionnaire de secrets).
+DB_PASSWORD_ENV = "KOYARWA_DB_PASSWORD"
 
 
 def instance_dir() -> Path:
@@ -114,6 +117,8 @@ def database_url() -> str | None:
     if not cfg or cfg.database is None:
         return None
     d = cfg.database
+    # Le mot de passe peut être fourni par l'environnement (secret hors fichier).
+    password = os.environ.get(DB_PASSWORD_ENV) or d.password
     return build_async_url(
-        engine=d.engine, host=d.host, port=d.port, user=d.user, password=d.password, name=d.name
+        engine=d.engine, host=d.host, port=d.port, user=d.user, password=password, name=d.name
     )

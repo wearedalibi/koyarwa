@@ -34,3 +34,25 @@ def test_sauvegarde_puis_chargement(tmp_path, monkeypatch):
     assert url.startswith("postgresql+asyncpg://u:")
     assert "@db:5432/koyarwa" in url
     assert 'p@ss"x' not in url  # le mot de passe brut n'apparaît pas tel quel
+
+
+def test_mot_de_passe_db_depuis_l_environnement(tmp_path, monkeypatch):
+    monkeypatch.setenv(ic.INSTANCE_DIR_ENV, str(tmp_path))
+    monkeypatch.setenv(ic.DB_PASSWORD_ENV, "motDePasseEnv")
+    ic.save(
+        ic.InstanceConfig(
+            installed=True,
+            language="fr",
+            database=ic.DatabaseConfig(
+                engine="postgresql",
+                host="db",
+                port=5432,
+                user="u",
+                password="placeholder-en-clair",
+                name="koyarwa",
+            ),
+        )
+    )
+    url = ic.database_url()
+    assert "motDePasseEnv" in url  # l'env prime
+    assert "placeholder-en-clair" not in url  # la valeur du fichier est ignorée
