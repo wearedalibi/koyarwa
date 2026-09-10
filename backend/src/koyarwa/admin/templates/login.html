@@ -22,13 +22,11 @@
         grid-template-columns: 1fr 1fr;
         min-height: 100vh;
       }
-      /* Panneau image (avec dégradé de marque en repli si l'image est absente) */
+      /* Panneau image (fond neutre en repli si l'image est absente) */
       .auth-visual {
         position: relative;
-        background-color: var(--colorBrandBackground);
-        background-image:
-          linear-gradient(150deg, rgba(15, 108, 189, 0.35), rgba(12, 59, 94, 0.8)),
-          url("/admin/static/img/login.jpg");
+        background-color: #2b2b2b;
+        background-image: url("/admin/static/img/login.jpg");
         background-size: cover;
         background-position: center;
       }
@@ -38,6 +36,7 @@
         right: 44px;
         bottom: 44px;
         color: #fff;
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
       }
       .auth-visual .caption strong {
         display: block;
@@ -55,11 +54,11 @@
         align-items: center;
         justify-content: center;
         padding: 40px;
-        background: var(--colorNeutralBackground1);
+        background: var(--colorNeutralBackground2);
       }
       .auth-box {
         width: 100%;
-        max-width: 340px;
+        max-width: 420px;
       }
       .brandmark {
         display: flex;
@@ -95,8 +94,15 @@
         font-size: 0.9rem;
         color: var(--colorNeutralForeground3);
       }
+      .auth-box input {
+        padding: 9px 12px;
+      }
+      .auth-box .pw input {
+        padding-right: 40px;
+      }
       .auth-box .stack button[type="submit"] {
         width: 100%;
+        padding: 9px 16px;
       }
       @media (max-width: 760px) {
         .auth-split {
