@@ -16,6 +16,7 @@ from koyarwa.core.config import settings
 from koyarwa.core.instance import is_installed, resolve_session_secret
 from koyarwa.core.security import csrf_protect
 from koyarwa.core.security.checks import check_startup_security
+from koyarwa.core.security.headers import SecurityHeadersMiddleware
 
 
 @asynccontextmanager
@@ -43,13 +44,16 @@ def create_app() -> FastAPI:
     # Sessions signées (cookie) — support de l'auth du back-office admin.
     # La clé générée à l'installation prime sur la valeur par défaut d'usine ;
     # à défaut (avant installation), on retombe sur celle de l'environnement.
+    cookie_secure = settings.admin.session_cookie_secure
+    if cookie_secure is None:
+        cookie_secure = settings.app.is_prod
     app.add_middleware(
         SessionMiddleware,
         secret_key=resolve_session_secret(settings.admin.session_secret.get_secret_value()),
         session_cookie=settings.admin.session_cookie,
         max_age=settings.admin.session_max_age,
         same_site="lax",
-        https_only=settings.app.is_prod,
+        https_only=cookie_secure,
     )
 
     # Rate limiting ajouté avant CORS pour que CORS reste le middleware le plus
@@ -71,6 +75,9 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # En-têtes de sécurité sur toutes les réponses (HSTS uniquement en prod/TLS).
+    app.add_middleware(SecurityHeadersMiddleware, hsts=settings.app.is_prod)
 
     # Setup-gate (le middleware le plus externe) : tant que l'instance n'est pas
     # installée, tout est redirigé vers l'assistant `/setup` ; une fois installée,

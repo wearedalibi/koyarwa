@@ -20,3 +20,7 @@ class AdminSettings(SectionSettings):
     session_secret: SecretStr = SecretStr("dev-insecure-change-me")
     session_cookie: str = "koyarwa_admin"
     session_max_age: int = 60 * 60 * 8  # 8 h
+    # Attribut `Secure` du cookie de session. `None` = suit l'environnement (actif
+    # en prod). Forçable via ADMIN_SESSION_COOKIE_SECURE si le TLS est terminé en
+    # amont sans APP_ENV=prod.
+    session_cookie_secure: bool | None = None
