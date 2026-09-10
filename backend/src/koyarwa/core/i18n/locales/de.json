@@ -36,5 +36,6 @@
   "pw.level2": "Mittel",
   "pw.level3": "Stark",
   "pw.level4": "Sehr stark",
-  "pw.hint": "Mindestens 10 Zeichen mit Groß-/Kleinbuchstaben, Ziffern und Symbolen."
+  "pw.hint": "Mindestens 10 Zeichen mit Groß-/Kleinbuchstaben, Ziffern und Symbolen.",
+  "setup.error.generic": "Installation fehlgeschlagen. Prüfen Sie die Server-Protokolle."
 }

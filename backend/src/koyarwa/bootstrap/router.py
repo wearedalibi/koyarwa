@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Annotated
 
@@ -156,11 +157,14 @@ async def finalize(request: Request, data: Annotated[AdminForm, Form()]) -> Resp
             lang=language,
         )
         await service.finalize_install(language=language, database=database, admin=admin)
-    except Exception as exc:  # l'échec est rapporté à l'installateur
+    except Exception:
+        # Le détail (erreurs base/driver, DSN…) reste dans les journaux serveur ;
+        # l'installateur ne reçoit qu'un message générique (pas de fuite d'info).
+        logging.getLogger("koyarwa.setup").exception("Échec de la finalisation de l'installation")
         return templates.TemplateResponse(
             request,
             "admin.html",
-            _context(request, "admin", error=str(exc)),
+            _context(request, "admin", error=translate("setup.error.generic", language)),
             status_code=500,
         )
 
