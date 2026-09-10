@@ -147,9 +147,9 @@
   ).split(" ");
 
   function initCountry(root) {
-    root.querySelectorAll("datalist[data-country-list]:not([data-country-ready])").forEach(
-      function (list) {
-        list.setAttribute("data-country-ready", "");
+    root.querySelectorAll("select[data-country-select]:not([data-country-ready])").forEach(
+      function (sel) {
+        sel.setAttribute("data-country-ready", "");
         var lang = document.documentElement.getAttribute("lang") || "en";
         var names = null;
         try {
@@ -157,19 +157,22 @@
         } catch (e) {
           names = null;
         }
-        var labels = [];
+        var current = sel.getAttribute("data-selected") || "";
+        var items = [];
         COUNTRY_CODES.forEach(function (code) {
           var label = names ? names.of(code) : code;
-          if (label && label !== code) labels.push(label);
+          if (label && label !== code) items.push({ code: code, label: label });
         });
-        labels.sort(function (a, b) {
-          return a.localeCompare(b, lang);
+        items.sort(function (a, b) {
+          return a.label.localeCompare(b.label, lang);
         });
-        while (list.firstChild) list.removeChild(list.firstChild);
-        labels.forEach(function (label) {
+        // Conserve l'option vide (placeholder) déjà présente ; ajoute les pays.
+        items.forEach(function (item) {
           var opt = document.createElement("option");
-          opt.value = label;
-          list.appendChild(opt);
+          opt.value = item.code;
+          opt.textContent = item.label;
+          if (item.code === current) opt.selected = true;
+          sel.appendChild(opt);
         });
       }
     );

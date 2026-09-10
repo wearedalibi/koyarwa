@@ -19,7 +19,7 @@ _ADMIN = {
     "password": "S3cret-passx",
     "email_visibility": "hidden",
     "city": "Lyon",
-    "country": "France",
+    "country": "FR",
     "timezone": "Europe/Paris",
     "description": "",
 }
