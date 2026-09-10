@@ -16,3 +16,7 @@ class RateLimitSettings(SectionSettings):
     enabled: bool = True
     requests: int = 120  # requêtes autorisées par fenêtre et par client
     window_seconds: int = 60
+    # Derrière un reverse-proxy (nginx), l'IP directe est celle du proxy : activer
+    # pour dériver l'IP cliente réelle de `X-Forwarded-For`. Ne l'activer QUE si un
+    # proxy de confiance ajoute cet en-tête (sinon un client peut usurper son IP).
+    trust_proxy: bool = False

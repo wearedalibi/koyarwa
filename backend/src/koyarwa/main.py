@@ -59,6 +59,7 @@ def create_app() -> FastAPI:
             limit=settings.ratelimit.requests,
             window_seconds=settings.ratelimit.window_seconds,
             exempt_paths={f"{settings.app.api_v1_prefix}/health"},
+            trust_proxy=settings.ratelimit.trust_proxy,
         )
 
     app.add_middleware(

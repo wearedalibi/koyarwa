@@ -43,18 +43,30 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         limit: int,
         window_seconds: float,
         exempt_paths: Iterable[str] = (),
+        trust_proxy: bool = False,
     ) -> None:
         super().__init__(app)
         self._limiter = SlidingWindowLimiter(limit, window_seconds)
         self._window = window_seconds
         self._exempt = set(exempt_paths)
+        self._trust_proxy = trust_proxy
+
+    def _client_key(self, request: Request) -> str:
+        if self._trust_proxy:
+            forwarded = request.headers.get("x-forwarded-for")
+            if forwarded:
+                # Une seule couche de proxy de confiance (nginx) : la dernière
+                # entrée est l'IP observée par le proxy, non falsifiable par le
+                # client (qui ne contrôle que les entrées de gauche).
+                return forwarded.split(",")[-1].strip()
+        return request.client.host if request.client else "?"
 
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
         if request.url.path in self._exempt:
             return await call_next(request)
-        client = request.client.host if request.client else "?"
+        client = self._client_key(request)
         if not self._limiter.allow(client):
             return JSONResponse(
                 {"detail": "Trop de requêtes, réessayez plus tard."},
