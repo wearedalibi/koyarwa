@@ -36,10 +36,5 @@
   "pw.level2": "Fair",
   "pw.level3": "Strong",
   "pw.level4": "Very strong",
-  "pw.hint": "At least 10 characters, mixing uppercase, digits and symbols.",
-  "setup.token.title": "Setup token",
-  "setup.token.intro": "For security, enter the token shown in the server console at startup.",
-  "setup.token.label": "Token",
-  "setup.token.invalid": "Invalid token.",
-  "setup.token.continue": "Continue"
+  "pw.hint": "At least 10 characters, mixing uppercase, digits and symbols."
 }

@@ -10,7 +10,6 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.pool import NullPool
 
-from koyarwa.bootstrap.setup_token import clear_token
 from koyarwa.core.config.database import build_async_url
 from koyarwa.core.db import get_sessionmaker, reset_engine
 from koyarwa.core.instance import DatabaseConfig, InstanceConfig, save
@@ -71,10 +70,9 @@ async def finalize_install(*, language: str, database: DatabaseConfig, admin: Us
     async with get_sessionmaker()() as session:
         await UserService(SqlUserRepository(session)).create(admin, is_superuser=True)
         await session.commit()
-    # 4. verrou d'installation + invalidation du jeton
+    # 4. verrou d'installation
     save(
         InstanceConfig(
             installed=True, language=language, database=database, secret_key=secret_key
         )
     )
-    clear_token()

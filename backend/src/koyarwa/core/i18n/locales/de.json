@@ -36,10 +36,5 @@
   "pw.level2": "Mittel",
   "pw.level3": "Stark",
   "pw.level4": "Sehr stark",
-  "pw.hint": "Mindestens 10 Zeichen mit Groß-/Kleinbuchstaben, Ziffern und Symbolen.",
-  "setup.token.title": "Installations-Token",
-  "setup.token.intro": "Geben Sie aus Sicherheitsgründen das beim Start in der Server-Konsole angezeigte Token ein.",
-  "setup.token.label": "Token",
-  "setup.token.invalid": "Ungültiges Token.",
-  "setup.token.continue": "Weiter"
+  "pw.hint": "Mindestens 10 Zeichen mit Groß-/Kleinbuchstaben, Ziffern und Symbolen."
 }

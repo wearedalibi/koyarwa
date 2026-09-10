@@ -36,10 +36,5 @@
   "pw.level2": "Moyen",
   "pw.level3": "Fort",
   "pw.level4": "Très fort",
-  "pw.hint": "Au moins 10 caractères, avec majuscules, chiffres et symboles.",
-  "setup.token.title": "Jeton d'installation",
-  "setup.token.intro": "Pour des raisons de sécurité, saisissez le jeton affiché dans la console du serveur au démarrage.",
-  "setup.token.label": "Jeton",
-  "setup.token.invalid": "Jeton invalide.",
-  "setup.token.continue": "Continuer"
+  "pw.hint": "Au moins 10 caractères, avec majuscules, chiffres et symboles."
 }

@@ -12,7 +12,6 @@ from koyarwa.admin import ADMIN_STATIC_DIR, RequiresLogin, admin_router, require
 from koyarwa.api.ratelimit import RateLimitMiddleware
 from koyarwa.api.v1.router import api_router
 from koyarwa.bootstrap import SetupGateMiddleware, setup_router
-from koyarwa.bootstrap.setup_token import get_or_create_token
 from koyarwa.core.config import settings
 from koyarwa.core.instance import is_installed, resolve_session_secret
 from koyarwa.core.security import csrf_protect
@@ -22,13 +21,11 @@ from koyarwa.core.security import csrf_protect
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Cycle de vie de l'app.
 
-    En mode installation (instance non installée), affiche le **jeton
-    d'installation** que l'assistant `/setup` exigera.
+    Signale au démarrage qu'une instance non installée expose l'assistant `/setup`.
     """
     if not is_installed():
         logging.getLogger("koyarwa.setup").warning(
-            "Instance NON installée — assistant sur /setup, protégé par le jeton : %s",
-            get_or_create_token(),
+            "Instance NON installée — ouvrez l'assistant de mise en place sur /setup."
         )
     yield
 
