@@ -53,15 +53,27 @@
         border-radius: var(--borderRadiusMedium); padding: 8px 12px;
         display: flex; align-items: center; gap: 8px;
       }
+      /* Mise en page de l'assistant : fin header + contenu centré */
+      .setup-body { min-height: 100vh; display: flex; flex-direction: column; }
+      .setup-topbar {
+        flex: none; display: flex; align-items: center; justify-content: flex-end;
+        height: 48px; padding: 0 16px;
+      }
+      main.setup-main {
+        flex: 1 1 auto; max-width: none; margin: 0; padding: 24px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      main.setup-main .auth { margin: 0; width: 100%; max-width: 520px; }
     </style>
   </head>
-  <body>
-    <header class="appbar">
-      <span class="brand"><i data-lucide="graduation-cap"></i> Koyarwa</span>
-      <span class="user">{{ t("setup.title") }}</span>
+  <body class="setup-body">
+    <header class="setup-topbar">
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Basculer le thème">
+        <i data-lucide="moon"></i>
+      </button>
     </header>
-    <main>
-      <div class="auth" style="max-width: 520px">
+    <main class="setup-main">
+      <div class="auth">
         <ol class="stepper">
           {% for s in steps %}
           <li class="{{ s.state }}">

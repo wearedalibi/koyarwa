@@ -2,7 +2,8 @@
  * Admin — habillage Fluent 2 sans librairie (design tokens en variables CSS).
  * Les valeurs reprennent les tokens Fluent UI (webLightTheme / webDarkTheme) :
  * neutres, brand (communication blue #0f6cbd), typo, espacements, rayons, ombres.
- * Thème sombre automatique via prefers-color-scheme.
+ * Thème sombre : automatique via prefers-color-scheme, ou forcé via [data-theme]
+ * sur <html> (switcher clair/sombre, cf. ui.js).
  */
 
 :root {
@@ -60,8 +61,13 @@
   --shadow8: 0 0 2px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.14);
 }
 
+/*
+ * Palette sombre. Appliquée (1) automatiquement selon l'OS, sauf si l'utilisateur
+ * a forcé le clair, et (2) explicitement quand [data-theme="dark"] est posé par le
+ * switcher. Les deux blocs partagent les mêmes valeurs — les garder synchronisés.
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --colorNeutralForeground1: #ffffff;
     --colorNeutralForeground2: #d6d6d6;
     --colorNeutralForeground3: #adadad;
@@ -84,6 +90,29 @@
     --shadow4: 0 0 2px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.28);
     --shadow8: 0 0 2px rgba(0, 0, 0, 0.24), 0 4px 8px rgba(0, 0, 0, 0.28);
   }
+}
+:root[data-theme="dark"] {
+  --colorNeutralForeground1: #ffffff;
+  --colorNeutralForeground2: #d6d6d6;
+  --colorNeutralForeground3: #adadad;
+  --colorNeutralBackground1: #292929;
+  --colorNeutralBackground1Hover: #3d3d3d;
+  --colorNeutralBackground2: #1f1f1f;
+  --colorNeutralBackground3: #141414;
+  --colorNeutralStroke1: #666666;
+  --colorNeutralStroke2: #525252;
+  --colorNeutralStroke3: #3d3d3d;
+  --colorNeutralStrokeAccessible: #adadad;
+  --colorStrokeFocus2: #ffffff;
+  --colorBrandBackground: #115ea3;
+  --colorBrandBackgroundHover: #0f6cbd;
+  --colorBrandBackgroundPressed: #0c3b5e;
+  --colorBrandForeground1: #479ef5;
+  --colorCompoundBrandStroke: #479ef5;
+  --colorPaletteRedForeground1: #ff9b9b;
+  --colorPaletteRedBackground1: #3b1b1b;
+  --shadow4: 0 0 2px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.28);
+  --shadow8: 0 0 2px rgba(0, 0, 0, 0.24), 0 4px 8px rgba(0, 0, 0, 0.28);
 }
 
 * {
@@ -288,6 +317,25 @@ tbody tr:hover {
 .auth {
   max-width: 360px;
   margin: 8vh auto 0;
+}
+
+/* Bascule de thème : bouton icône discret (surcharge le bouton primaire bleu) */
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: var(--colorNeutralForeground3);
+  background: transparent;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusMedium);
+}
+.theme-toggle:hover {
+  color: var(--colorNeutralForeground1);
+  background: var(--colorNeutralBackground1Hover);
+}
+.theme-toggle .lucide {
+  width: 18px;
+  height: 18px;
 }
 
 /* Icônes (Lucide) — le SVG généré porte la classe .lucide et hérite de currentColor */
