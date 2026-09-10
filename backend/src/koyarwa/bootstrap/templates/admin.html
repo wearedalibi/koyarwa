@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+{% set form = form|default({}) %}
+{% set ev = form.get("email_visibility", "hidden") %}
 <h1><i data-lucide="user-cog"></i> {{ t("setup.step.admin") }}</h1>
 <p class="subtitle">{{ t("setup.admin.intro") }}</p>
 {% if error %}<p class="error">{{ error }}</p>{% endif %}
@@ -8,27 +10,27 @@
   <div class="row2">
     <div class="field">
       <label for="first_name">{{ t("setup.admin.first_name") }}</label>
-      <input id="first_name" name="first_name" autocomplete="given-name" />
+      <input id="first_name" name="first_name" autocomplete="given-name" value="{{ form.get('first_name', '') }}" />
     </div>
     <div class="field">
       <label for="last_name">{{ t("setup.admin.last_name") }}</label>
-      <input id="last_name" name="last_name" autocomplete="family-name" />
+      <input id="last_name" name="last_name" autocomplete="family-name" value="{{ form.get('last_name', '') }}" />
     </div>
   </div>
   <div class="field">
     <label for="username">{{ t("setup.admin.username") }}</label>
-    <input id="username" name="username" autocomplete="username" required />
+    <input id="username" name="username" autocomplete="username" required value="{{ form.get('username', '') }}" />
   </div>
   <div class="field">
     <label for="email">{{ t("setup.admin.email") }}</label>
-    <input id="email" name="email" type="email" autocomplete="email" required />
+    <input id="email" name="email" type="email" autocomplete="email" required value="{{ form.get('email', '') }}" />
   </div>
   <div class="field">
     <label for="email_visibility">{{ t("setup.admin.email_visibility") }}</label>
     <select id="email_visibility" name="email_visibility">
-      <option value="hidden" selected>{{ t("setup.admin.visibility.hidden") }}</option>
-      <option value="members">{{ t("setup.admin.visibility.members") }}</option>
-      <option value="public">{{ t("setup.admin.visibility.public") }}</option>
+      <option value="hidden" {{ "selected" if ev == "hidden" else "" }}>{{ t("setup.admin.visibility.hidden") }}</option>
+      <option value="members" {{ "selected" if ev == "members" else "" }}>{{ t("setup.admin.visibility.members") }}</option>
+      <option value="public" {{ "selected" if ev == "public" else "" }}>{{ t("setup.admin.visibility.public") }}</option>
     </select>
   </div>
   <div class="field">
@@ -51,11 +53,11 @@
   <div class="row2">
     <div class="field">
       <label for="city">{{ t("setup.admin.city") }}</label>
-      <input id="city" name="city" autocomplete="address-level2" />
+      <input id="city" name="city" autocomplete="address-level2" value="{{ form.get('city', '') }}" />
     </div>
     <div class="field">
       <label for="country">{{ t("setup.admin.country") }}</label>
-      <select id="country" name="country" data-country-select>
+      <select id="country" name="country" data-country-select data-selected="{{ form.get('country', '') }}">
         <option value=""></option>
       </select>
     </div>
@@ -63,14 +65,15 @@
   <div class="field">
     <label for="timezone">{{ t("setup.admin.timezone") }}</label>
     <select id="timezone" name="timezone">
+      {% set tzsel = form.get("timezone", "UTC") %}
       {% for tz in timezones %}
-      <option value="{{ tz }}" {{ "selected" if tz == "UTC" else "" }}>{{ tz }}</option>
+      <option value="{{ tz }}" {{ "selected" if tz == tzsel else "" }}>{{ tz }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="field">
     <label for="description">{{ t("setup.admin.description") }}</label>
-    <textarea id="description" name="description" rows="3"></textarea>
+    <textarea id="description" name="description" rows="3">{{ form.get('description', '') }}</textarea>
   </div>
   <div class="setup-actions">
     <a class="btn-back" href="/setup/database"><i data-lucide="arrow-left"></i> {{ t("common.back") }}</a>

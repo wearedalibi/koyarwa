@@ -79,10 +79,6 @@
     return Math.min(s, 4);
   }
 
-  function isStrong(pw) {
-    return pw.length >= 10 && variety(pw) >= 3;
-  }
-
   function initToggles(root) {
     root.querySelectorAll("[data-pw]:not([data-pw-ready])").forEach(function (wrap) {
       wrap.setAttribute("data-pw-ready", "");
@@ -112,8 +108,6 @@
         labels = {};
       }
       var label = meter.querySelector(".strength-label");
-      var form = input.closest("form");
-      var submit = form ? form.querySelector('button[type="submit"]') : null;
 
       function update() {
         var pw = input.value;
@@ -123,7 +117,6 @@
         });
         meter.classList.add(LEVELS[s]);
         if (label) label.textContent = pw ? labels[String(s)] || "" : "";
-        if (submit) submit.disabled = !isStrong(pw);
       }
 
       input.addEventListener("input", update);

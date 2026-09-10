@@ -216,6 +216,12 @@ code {
   font-weight: var(--fontWeightSemibold);
   color: var(--colorNeutralForeground2);
 }
+/* Champ requis : astérisque rouge automatique sur le libellé */
+.field:has(:required) > label::after {
+  content: " *";
+  color: var(--colorPaletteRedForeground1);
+  font-weight: var(--fontWeightSemibold);
+}
 
 input,
 textarea {
@@ -265,6 +271,10 @@ button:hover {
 }
 button:active {
   background: var(--colorBrandBackgroundPressed);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 button:focus-visible {
   outline: 2px solid var(--colorStrokeFocus2);

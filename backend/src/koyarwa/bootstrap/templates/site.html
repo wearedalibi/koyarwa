@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% set form = form|default({}) %}
 <h1><i data-lucide="globe"></i> {{ t("setup.step.site") }}</h1>
 <p class="subtitle">{{ t("setup.site.intro") }}</p>
 {% if error %}<p class="error">{{ error }}</p>{% endif %}
@@ -7,40 +8,42 @@
   {{ csrf_input() }}
   <div class="field">
     <label for="full_name">{{ t("setup.site.full_name") }}</label>
-    <input id="full_name" name="full_name" required maxlength="255" />
+    <input id="full_name" name="full_name" required maxlength="255" value="{{ form.get('full_name', '') }}" />
   </div>
   <div class="field">
     <label for="short_name">{{ t("setup.site.short_name") }}</label>
-    <input id="short_name" name="short_name" required maxlength="100" />
+    <input id="short_name" name="short_name" required maxlength="100" value="{{ form.get('short_name', '') }}" />
   </div>
   <div class="field">
     <label for="description">{{ t("setup.site.description") }}</label>
-    <textarea id="description" name="description" rows="3"></textarea>
+    <textarea id="description" name="description" rows="3">{{ form.get('description', '') }}</textarea>
   </div>
   <div class="field">
     <label for="timezone">{{ t("setup.site.timezone") }}</label>
     <select id="timezone" name="timezone">
+      {% set tzsel = form.get("timezone", "UTC") %}
       {% for tz in timezones %}
-      <option value="{{ tz }}" {{ "selected" if tz == "UTC" else "" }}>{{ tz }}</option>
+      <option value="{{ tz }}" {{ "selected" if tz == tzsel else "" }}>{{ tz }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="field">
     <label for="auth_method">{{ t("setup.site.auth_method") }}</label>
     <select id="auth_method" name="auth_method">
+      {% set amsel = form.get("auth_method", "manual") %}
       {% for method in auth_methods %}
-      <option value="{{ method }}">{{ t("setup.site.auth." ~ method) }}</option>
+      <option value="{{ method }}" {{ "selected" if method == amsel else "" }}>{{ t("setup.site.auth." ~ method) }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="row2">
     <div class="field">
       <label for="noreply_email">{{ t("setup.site.noreply_email") }}</label>
-      <input id="noreply_email" name="noreply_email" type="email" autocomplete="off" />
+      <input id="noreply_email" name="noreply_email" type="email" autocomplete="off" value="{{ form.get('noreply_email', '') }}" />
     </div>
     <div class="field">
       <label for="support_email">{{ t("setup.site.support_email") }}</label>
-      <input id="support_email" name="support_email" type="email" autocomplete="off" />
+      <input id="support_email" name="support_email" type="email" autocomplete="off" value="{{ form.get('support_email', '') }}" />
     </div>
   </div>
   <div class="setup-actions">

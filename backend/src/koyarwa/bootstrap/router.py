@@ -163,7 +163,14 @@ def step_admin(request: Request) -> Response:
     if "database" not in _state(request):
         return RedirectResponse("/setup/database", status_code=303)
     return templates.TemplateResponse(
-        request, "admin.html", _context(request, "admin", timezones=sorted(available_timezones()))
+        request,
+        "admin.html",
+        _context(
+            request,
+            "admin",
+            timezones=sorted(available_timezones()),
+            form=_state(request).get("admin", {}),
+        ),
     )
 
 
@@ -194,7 +201,11 @@ async def submit_admin(request: Request, data: Annotated[AdminForm, Form()]) -> 
             request,
             "admin.html",
             _context(
-                request, "admin", error=_first_error(exc), timezones=sorted(available_timezones())
+                request,
+                "admin",
+                error=_first_error(exc),
+                timezones=sorted(available_timezones()),
+                form=data.model_dump(exclude={"password"}),
             ),
             status_code=400,
         )
@@ -237,7 +248,12 @@ async def submit_site(request: Request, data: Annotated[SiteForm, Form()]) -> Re
             request,
             "site.html",
             _context(
-                request, "site", error=message, timezones=timezones, auth_methods=_AUTH_METHODS
+                request,
+                "site",
+                error=message,
+                timezones=timezones,
+                auth_methods=_AUTH_METHODS,
+                form=data.model_dump(),
             ),
             status_code=status,
         )

@@ -95,3 +95,5 @@ def test_mot_de_passe_faible_refuse_a_l_etape_admin(monkeypatch, csrf):
             follow_redirects=False,
         )
     assert weak.status_code == 400
+    assert 'class="error"' in weak.text  # un retour visible (message d'erreur)
+    assert 'value="admin"' in weak.text  # les valeurs saisies sont conservées
