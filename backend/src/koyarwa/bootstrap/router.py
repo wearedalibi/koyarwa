@@ -10,10 +10,12 @@ from koyarwa.bootstrap import service
 from koyarwa.bootstrap.setup_token import verify_token
 from koyarwa.core.i18n import SUPPORTED_LANGUAGES, normalize_locale, translate
 from koyarwa.core.instance import DatabaseConfig
+from koyarwa.core.security import register_csrf
 from koyarwa.features.identity.schemas import UserCreate
 
 _DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(_DIR / "templates"))
+register_csrf(templates)
 
 router = APIRouter(prefix="/setup", tags=["setup"], include_in_schema=False)
 

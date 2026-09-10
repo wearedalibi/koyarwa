@@ -2,7 +2,7 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
@@ -15,6 +15,7 @@ from koyarwa.bootstrap import SetupGateMiddleware, setup_router
 from koyarwa.bootstrap.setup_token import get_or_create_token
 from koyarwa.core.config import settings
 from koyarwa.core.instance import is_installed
+from koyarwa.core.security import csrf_protect
 
 
 @asynccontextmanager
@@ -77,9 +78,11 @@ def create_app() -> FastAPI:
     app.include_router(api_router, prefix=settings.app.api_v1_prefix)
 
     # Back-office admin (Jinja + HTMX) — hors schéma OpenAPI (canal HTML, pas l'API).
+    # Les formulaires HTML (admin + assistant) sont protégés contre le CSRF ; l'API
+    # JSON du portal, authentifiée par jeton et non par cookie, en est dispensée.
     app.mount("/admin/static", StaticFiles(directory=str(ADMIN_STATIC_DIR)), name="admin-static")
-    app.include_router(admin_router, include_in_schema=False)
-    app.include_router(setup_router)
+    app.include_router(admin_router, include_in_schema=False, dependencies=[Depends(csrf_protect)])
+    app.include_router(setup_router, dependencies=[Depends(csrf_protect)])
 
     app.add_exception_handler(RequiresLogin, requires_login_handler)
 

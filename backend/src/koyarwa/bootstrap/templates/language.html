@@ -3,6 +3,7 @@
 <h1><i data-lucide="languages"></i> {{ t("setup.step.language") }}</h1>
 <p class="subtitle">{{ t("setup.language.intro") }}</p>
 <form class="card stack" method="post" action="/setup">
+  {{ csrf_input() }}
   <div class="field">
     <label for="language">{{ t("common.language") }}</label>
     <select id="language" name="language">

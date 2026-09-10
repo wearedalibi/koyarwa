@@ -4,6 +4,7 @@
 <p class="subtitle">{{ t("setup.admin.intro") }}</p>
 {% if error %}<p class="error">{{ error }}</p>{% endif %}
 <form class="card stack" method="post" action="/setup/admin">
+  {{ csrf_input() }}
   <div class="field">
     <label for="name">{{ t("setup.admin.name") }}</label>
     <input id="name" name="name" autocomplete="name" />

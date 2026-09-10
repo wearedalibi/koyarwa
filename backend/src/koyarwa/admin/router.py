@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from koyarwa.admin.auth import SESSION_KEY, require_admin, verify_credentials
+from koyarwa.core.security import register_csrf
 from koyarwa.features.announcements.ports import get_announcement_service
 from koyarwa.features.announcements.schemas import AnnouncementCreate
 from koyarwa.features.announcements.service import AnnouncementService
@@ -14,6 +15,7 @@ _ADMIN_DIR = Path(__file__).resolve().parent
 #: Répertoire des fichiers statiques admin (monté par `main.py`).
 ADMIN_STATIC_DIR = _ADMIN_DIR / "static"
 templates = Jinja2Templates(directory=str(_ADMIN_DIR / "templates"))
+register_csrf(templates)
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 

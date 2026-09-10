@@ -14,6 +14,7 @@
   hx-on::after-request="if (event.detail.successful) this.reset()"
   style="max-width: 560px"
 >
+  {{ csrf_input() }}
   <div class="field">
     <label for="title">Titre</label>
     <input id="title" name="title" required maxlength="200" />

@@ -10,22 +10,24 @@ def test_page_admin_protegee_redirige_vers_login():
     assert res.headers["location"] == "/admin/login"
 
 
-def test_login_invalide_reste_401():
+def test_login_invalide_reste_401(csrf):
     with TestClient(app) as client:
+        token = csrf(client, "/admin/login")
         res = client.post(
             "/admin/login",
-            data={"username": "admin", "password": "mauvais"},
+            data={"username": "admin", "password": "mauvais", "csrf_token": token},
             follow_redirects=False,
         )
     assert res.status_code == 401
 
 
-def test_login_puis_acces_page_protegee():
+def test_login_puis_acces_page_protegee(csrf):
     with TestClient(app) as client:
         # défauts ADMIN_USERNAME / ADMIN_PASSWORD = admin / admin
+        token = csrf(client, "/admin/login")
         ok = client.post(
             "/admin/login",
-            data={"username": "admin", "password": "admin"},
+            data={"username": "admin", "password": "admin", "csrf_token": token},
             follow_redirects=False,
         )
         assert ok.status_code == 303

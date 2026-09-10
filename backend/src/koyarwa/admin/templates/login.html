@@ -146,6 +146,7 @@
           {% if error %}<p class="error">{{ error }}</p>{% endif %}
 
           <form class="stack" method="post" action="/admin/login">
+            {{ csrf_input() }}
             <div class="field">
               <label for="username">Utilisateur</label>
               <input id="username" name="username" autocomplete="username" autofocus />

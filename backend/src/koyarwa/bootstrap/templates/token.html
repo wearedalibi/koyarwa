@@ -4,6 +4,7 @@
 <p class="subtitle">{{ t("setup.token.intro") }}</p>
 {% if error %}<p class="error">{{ t("setup.token.invalid") }}</p>{% endif %}
 <form class="card stack" method="post" action="/setup/token">
+  {{ csrf_input() }}
   <div class="field">
     <label for="token">{{ t("setup.token.label") }}</label>
     <input id="token" name="token" autocomplete="off" autofocus />

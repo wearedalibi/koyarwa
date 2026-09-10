@@ -1,6 +1,21 @@
+import re
+
 import pytest
 
 from koyarwa.bootstrap import gate
+
+
+@pytest.fixture
+def csrf():
+    """Extrait le jeton CSRF (champ caché) d'une page pour rejouer un POST valide."""
+
+    def _token(client, url: str) -> str:
+        html = client.get(url).text
+        match = re.search(r'name="csrf_token" value="([^"]+)"', html)
+        assert match, f"aucun champ csrf_token sur {url}"
+        return match.group(1)
+
+    return _token
 
 
 @pytest.fixture(autouse=True)
