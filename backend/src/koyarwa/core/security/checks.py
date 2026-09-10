@@ -30,3 +30,8 @@ def check_startup_security() -> None:
         if settings.app.is_prod and is_installed():
             raise RuntimeError(f"Configuration non sécurisée : {detail}")
         _log.warning("Sécurité : %s", detail)
+
+    if settings.app.is_prod and not settings.api.token.get_secret_value():
+        _log.warning(
+            "Sécurité : l'API JSON tourne SANS authentification (API_TOKEN non défini)."
+        )
