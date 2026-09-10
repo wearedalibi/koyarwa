@@ -5,11 +5,13 @@ from fastapi import APIRouter, Depends, Form, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from koyarwa.admin.auth import SESSION_KEY, require_admin, verify_credentials
+from koyarwa.admin.auth import SESSION_KEY, login_throttle, require_admin
 from koyarwa.core.security import register_csrf
 from koyarwa.features.announcements.ports import get_announcement_service
 from koyarwa.features.announcements.schemas import AnnouncementCreate
 from koyarwa.features.announcements.service import AnnouncementService
+from koyarwa.features.identity.ports import get_user_service
+from koyarwa.features.identity.service import UserService
 
 _ADMIN_DIR = Path(__file__).resolve().parent
 #: Répertoire des fichiers statiques admin (monté par `main.py`).
@@ -21,6 +23,7 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 CurrentUser = Annotated[str, Depends(require_admin)]
 ServiceDep = Annotated[AnnouncementService, Depends(get_announcement_service)]
+UserServiceDep = Annotated[UserService, Depends(get_user_service)]
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -29,14 +32,27 @@ def login_form(request: Request) -> HTMLResponse:
 
 
 @router.post("/login")
-def login_submit(
+async def login_submit(
     request: Request,
+    service: UserServiceDep,
     username: Annotated[str, Form()],
     password: Annotated[str, Form()],
 ) -> Response:
-    if verify_credentials(username, password):
-        request.session[SESSION_KEY] = username
+    # Verrou anti-force-brute : refuse les tentatives d'un compte trop sollicité.
+    if login_throttle.locked_for(username) > 0:
+        return templates.TemplateResponse(
+            request,
+            "login.html",
+            {"error": "Trop de tentatives échouées. Réessayez dans quelques minutes."},
+            status_code=429,
+        )
+    # Authentification sur le super-administrateur en base (créé à l'installation).
+    user = await service.authenticate(username, password)
+    if user is not None and user.is_superuser:
+        login_throttle.reset(username)
+        request.session[SESSION_KEY] = user.username
         return RedirectResponse("/admin/announcements", status_code=303)
+    login_throttle.record_failure(username)
     return templates.TemplateResponse(
         request, "login.html", {"error": "Identifiants invalides."}, status_code=401
     )

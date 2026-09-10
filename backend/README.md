@@ -65,7 +65,7 @@ src/koyarwa/
 
 Tout passe par l'environnement, sans valeur en dur. Chaque section a son préfixe :
 `APP_`, `ADMIN_`, `DB_`, `CORS_`, `RATELIMIT_` (voir `.env.example`). L'accès se fait via
-`settings.<section>.<champ>` (ex. `settings.db.url`, `settings.admin.username`). Les
+`settings.<section>.<champ>` (ex. `settings.db.url`, `settings.admin.session_cookie`). Les
 secrets sont des `SecretStr`.
 
 ### Back-office admin
