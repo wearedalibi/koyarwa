@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import secrets
 from pathlib import Path
 
 from alembic import command
@@ -54,8 +55,15 @@ async def apply_migrations() -> None:
 
 async def finalize_install(*, language: str, database: DatabaseConfig, admin: UserCreate) -> None:
     """Écrit la config, applique le schéma, crée le super-admin, pose le verrou."""
+    # Clé de session propre à l'instance, générée maintenant (façon salts WordPress) :
+    # elle remplace la valeur par défaut d'usine au prochain démarrage.
+    secret_key = secrets.token_urlsafe(48)
     # 1. config (non verrouillée) → la base saisie devient la base active
-    save(InstanceConfig(installed=False, language=language, database=database))
+    save(
+        InstanceConfig(
+            installed=False, language=language, database=database, secret_key=secret_key
+        )
+    )
     reset_engine()
     # 2. schéma
     await apply_migrations()
@@ -64,5 +72,9 @@ async def finalize_install(*, language: str, database: DatabaseConfig, admin: Us
         await UserService(SqlUserRepository(session)).create(admin, is_superuser=True)
         await session.commit()
     # 4. verrou d'installation + invalidation du jeton
-    save(InstanceConfig(installed=True, language=language, database=database))
+    save(
+        InstanceConfig(
+            installed=True, language=language, database=database, secret_key=secret_key
+        )
+    )
     clear_token()

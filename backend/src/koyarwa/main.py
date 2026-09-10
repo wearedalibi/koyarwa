@@ -14,7 +14,7 @@ from koyarwa.api.v1.router import api_router
 from koyarwa.bootstrap import SetupGateMiddleware, setup_router
 from koyarwa.bootstrap.setup_token import get_or_create_token
 from koyarwa.core.config import settings
-from koyarwa.core.instance import is_installed
+from koyarwa.core.instance import is_installed, resolve_session_secret
 from koyarwa.core.security import csrf_protect
 
 
@@ -42,9 +42,11 @@ def create_app() -> FastAPI:
     )
 
     # Sessions signées (cookie) — support de l'auth du back-office admin.
+    # La clé générée à l'installation prime sur la valeur par défaut d'usine ;
+    # à défaut (avant installation), on retombe sur celle de l'environnement.
     app.add_middleware(
         SessionMiddleware,
-        secret_key=settings.admin.session_secret.get_secret_value(),
+        secret_key=resolve_session_secret(settings.admin.session_secret.get_secret_value()),
         session_cookie=settings.admin.session_cookie,
         max_age=settings.admin.session_max_age,
         same_site="lax",

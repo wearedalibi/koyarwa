@@ -17,6 +17,7 @@ import secrets
 from pathlib import Path
 
 from koyarwa.core.instance import instance_dir
+from koyarwa.core.instance.storage import write_private_text
 
 _TOKEN_FILENAME = "setup_token"
 _cached: str | None = None
@@ -42,8 +43,7 @@ def get_or_create_token() -> str:
     token = secrets.token_urlsafe(24)
     _cached = token
     try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(token, encoding="utf-8")
+        write_private_text(path, token)
     except OSError:
         pass  # dossier non inscriptible → le jeton reste en mémoire
     return token

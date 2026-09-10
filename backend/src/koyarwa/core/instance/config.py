@@ -18,6 +18,7 @@ from pathlib import Path
 import tomli_w
 
 from koyarwa.core.config.database import build_async_url
+from koyarwa.core.instance.storage import write_private_text
 
 INSTANCE_DIR_ENV = "KOYARWA_INSTANCE_DIR"
 CONFIG_FILENAME = "config.toml"
@@ -48,6 +49,9 @@ class InstanceConfig:
     installed: bool
     language: str
     database: DatabaseConfig | None = None
+    #: Clé de signature des cookies de session, générée aléatoirement à
+    #: l'installation (façon salts WordPress). Absente tant que non installé.
+    secret_key: str | None = None
 
 
 def load() -> InstanceConfig | None:
@@ -57,27 +61,42 @@ def load() -> InstanceConfig | None:
         return None
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     db = data.get("database")
+    secret = data.get("secret_key")
     return InstanceConfig(
         installed=bool(data.get("installed", False)),
         language=str(data.get("language", "fr")),
         database=DatabaseConfig(**db) if db else None,
+        secret_key=str(secret) if secret else None,
     )
 
 
 def save(config: InstanceConfig) -> None:
-    """Écrit la config d'instance (crée le répertoire au besoin)."""
-    path = config_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
+    """Écrit la config d'instance à permissions restreintes (0600) — contient des secrets."""
     doc: dict[str, object] = {"installed": config.installed, "language": config.language}
+    if config.secret_key:
+        doc["secret_key"] = config.secret_key
     if config.database is not None:
         doc["database"] = {k: v for k, v in asdict(config.database).items() if v is not None}
-    path.write_text(tomli_w.dumps(doc), encoding="utf-8")
+    write_private_text(config_path(), tomli_w.dumps(doc))
 
 
 def is_installed() -> bool:
     """L'instance est-elle installée (verrou posé) ?"""
     cfg = load()
     return bool(cfg and cfg.installed)
+
+
+def resolve_session_secret(fallback: str) -> str:
+    """Clé de signature des sessions : celle générée à l'installation, sinon `fallback`.
+
+    Une fois l'instance installée, la clé aléatoire persistée l'emporte sur la
+    valeur d'environnement/par défaut ; l'application doit être redémarrée pour la
+    prendre en compte (le middleware de session est figé au démarrage).
+    """
+    cfg = load()
+    if cfg and cfg.secret_key:
+        return cfg.secret_key
+    return fallback
 
 
 def instance_language() -> str | None:

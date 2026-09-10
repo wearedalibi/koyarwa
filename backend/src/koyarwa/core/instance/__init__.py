@@ -7,6 +7,7 @@ from koyarwa.core.instance.config import (
     instance_language,
     is_installed,
     load,
+    resolve_session_secret,
     save,
 )
 
@@ -19,5 +20,6 @@ __all__ = [
     "instance_language",
     "is_installed",
     "load",
+    "resolve_session_secret",
     "save",
 ]
